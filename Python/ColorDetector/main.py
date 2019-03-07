@@ -125,7 +125,6 @@ while True:
         debug_markers = not debug_markers
     if cv2.waitKey(1) & 0xFF == ord('c'):
         debug_colors = not debug_colors
-        
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
