@@ -5,7 +5,6 @@ import imutils
 
 camA = cv2.VideoCapture(0)
 
-
 fieldWidth = 730
 fieldHeight = 345
 
@@ -150,12 +149,6 @@ def getMarkers(gray, debug=False):
                 cv2.imshow("G", gray)
             i += 1
     return markers
-
-
-def get_depth_map():
-    array, _ = freenect.sync_get_depth()
-    array = array.astype(np.uint8)
-    return array
 
 
 def slider(win, name, f, t):
