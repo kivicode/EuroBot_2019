@@ -1,4 +1,4 @@
-from utils import *
+from utils import *  # импорт некоторых полезных функци
 
 POINTS = []
 
@@ -7,18 +7,18 @@ debug_markers = False
 
 PURPLE = 0
 
-lowers = [[0] * 3] * 3
-uppers = [[0] * 3] * 3
+lowers = [[0] * 3] * 3  # массив с нижними уровнями для 3 цветов
+uppers = [[0] * 3] * 3  # массив с верхними уровнями для 3 цветов
 
-pucks = {'purple': []}
+pucks = {'purple': []}  # массив с шайбами
 
 
-def press(event, x, y, a, b):
+def press(event, x, y, a, b):  # функция выбора пикселя для настройки цвета
     if event == cv2.EVENT_LBUTTONDBLCLK:
         POINTS.append([x, y])
 
 
-def calibrate_purple(pixel, name=PURPLE):
+def calibrate_purple(pixel, name=PURPLE):  # функция настройи по заданному цвету на изображении
     sensitivity: int = 60
     upper = np.array([pixel[0] + sensitivity, pixel[1] + sensitivity, pixel[2] + 2 * sensitivity])
     lower = np.array([pixel[0] - sensitivity, pixel[1] - sensitivity, pixel[2] - 2 * sensitivity])
@@ -27,102 +27,95 @@ def calibrate_purple(pixel, name=PURPLE):
     print(lower, upper)
 
 
-def setup():
+def setup():  # первый цикл настройки, вызывается в начале программы
     cv2.namedWindow("Final")
     cv2.setMouseCallback('Final', press)
 
     while True:
         frame = getImage()
         cv2.imshow('Final', frame)
-        if cv2.waitKey(1) & 0xFF == ord('p') or len(POINTS) == 1:
-            blurred = cv2.GaussianBlur(frame, (11, 11), 0)
-            hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
+        if cv2.waitKey(1) & 0xFF == ord('p') or len(POINTS) == 1:  # вызов настроки цвета при выборе пикселя
+            blurred = cv2.GaussianBlur(frame, (11, 11), 0)  # блюр
+            hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)  # перевод в HSV
             pix = hsv[POINTS[0][1], POINTS[0][0]]
             calibrate_purple(pix)
             break
 
 
-def main():
+def main():  # основной цикл
     orig = getImage()
-    gray = cv2.cvtColor(orig, cv2.COLOR_BGR2GRAY)
 
     if debug_colors:
         try:
-            blurred = cv2.GaussianBlur(orig, (11, 11), 0)
-            hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
+            blurred = cv2.GaussianBlur(orig, (11, 11), 0)  # блюр
+            hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)  # перевод в HSV
             low = lowers[0]
             up = uppers[0]
-            kernel = np.ones((10, 10), np.uint8)
-            mask = cv2.inRange(hsv, low, up)
-            mask = cv2.erode(mask, kernel)
-            mask = cv2.dilate(mask, kernel)
-            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+            kernel = np.ones((10, 10), np.uint8)  # настройка ядра для морфологических преобразований
+            mask = cv2.inRange(hsv, low, up)  # создание маски для цвета
+            mask = cv2.erode(mask, kernel)  # эрозия
+            mask = cv2.dilate(mask, kernel)  # растяжение
+            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)  # фильтрация шумов
             mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 
             _, contours, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
-                                              cv2.CHAIN_APPROX_SIMPLE)
-            pucks['purple'].clear()
-            h, w, c = orig.shape
-            cv2.line(orig, (int(w / 2), 0), (int(w / 2), h), (0, 255, 0))
+                                              cv2.CHAIN_APPROX_SIMPLE)  # поиск контуров шайб
+            pucks['purple'].clear()  # чистка массива фиолетовых шайб для нового кадра
+            h, w, c = orig.shape  # размеры картинки
+            cv2.line(orig, (int(w / 2), 0), (int(w / 2), h),
+                     (0, 255, 0))  # рисуем верт линию в центре экрана (для дебага)
             for cnt in contours:
-                if cv2.contourArea(cnt) > 500:
-                    M = cv2.moments(cnt)
-                    cx = int(M['m10'] / M['m00'])
-                    cy = int(M['m01'] / M['m00'])
-                    pucks['purple'].append((cx, cy))
-                    cv2.circle(orig, (cx, cy), 10, (255, 255, 255), -1)
-                    # rect = cv2.minAreaRect(cnt)
-                    # box = cv2.boxPoints(rect)
-                    # box = np.int0(box)
-                    # cv2.drawContours(new_mask, [box], 0, (255, 255, 255), -1)
+                if cv2.contourArea(cnt) > 500:  # фильтрация по минимальной площади
+                    M = cv2.moments(cnt)  # поиск моментов контура
+                    cx = int(M['m10'] / M['m00'])  # вычисление центра по иксу
+                    cy = int(M['m01'] / M['m00'])  # вычисление центра по игреку
+                    pucks['purple'].append((cx, cy))  # добавляем центр шайбы в массив
+                    cv2.circle(orig, (cx, cy), 10, (255, 255, 255), -1)  # рисуем центр
+
             y_max = 0
             goal = pucks['purple'][0]
-            for purple in pucks['purple']:
+            for purple in pucks['purple']:  # поиск контура с максимальнм игреком (ближайшая)
                 x, y = purple
                 if y > y_max:
                     y_max = y
                     goal = purple
             text = ""
-            goal_y = 560
-            if abs(goal[0] - (w / 2)) < 15:
+            goal_y = 560  # целевое значение по игреку (для манипулятора)
+            tolerance_x = 15  # чуствительность по иксу
+            tolerance_y = 30  # чуствительность по игреку
+            if abs(goal[0] - (w / 2)) < tolerance_x:
                 text = "OK"
             elif goal[0] < w / 2:
                 text = "Turn Left"
             elif goal[0] > w / 2:
                 text = "Turn Right"
 
-            if abs(goal[1] - goal_y) < 30:
+            if abs(goal[1] - goal_y) < tolerance_y:
                 text += "  OK"
             elif goal[1] < goal_y:
                 text += "  Go Forward"
             elif goal[1] > goal_y:
                 text += "  Go Backward"
-            cv2.circle(orig, goal, 10, (0, 0, 255), -1)
-            cv2.putText(orig, text, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3)
+            cv2.circle(orig, goal, 10, (0, 0, 255), -1)  # отмечаем целевую шайбу красным цветом
+            cv2.putText(orig, text, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0),
+                        3)  # рисуем указания по движению робота
 
             cv2.imshow("Mask", mask)
         except Exception as exception:
             print("Color detection runtime error: %s" % exception)
             pass
-    # if debug_markers:
-    #     try:
-    #         marker = getMarkers(gray)[120]
-    #         cv2.circle(orig, marker, 20, (255, 0, 255), -1)
-    #     except Exception as exception:
-    #         print("Marker %d no found" % int(str(exception)))
+
     cv2.imshow('Final', orig)
 
 
 setup()
 
-while True:
+while True:  # вызывает главную функцию каждый кадр
     try:
         main()
     except Exception as e:
         print(e)
 
-    if cv2.waitKey(1) & 0xFF == ord('m'):
-        debug_markers = not debug_markers
     if cv2.waitKey(1) & 0xFF == ord('c'):
         debug_colors = not debug_colors
     if cv2.waitKey(1) & 0xFF == ord('q'):
