@@ -4,13 +4,13 @@ Motor* RM = new Motor(RightMotorPinA, RightMotorPinB, LeftEncoderPin, true);
 void forward(int cm) {
   LM->forward();
   RM->forward();
-  go();
+  go(cm);
 }
 
 void backward(int cm) {
   LM->backward();
   RM->backward();
-  go();
+  go(cm);
 }
 
 void left(int deg) {
@@ -27,11 +27,11 @@ long int cm2ticks(int cm) {
   return ticks;
 }
 
-void go() {
+void go(int cm) {
   long int ticks = cm2ticks(cm);
   while (LM->shouldMove(ticks) || RM->shouldMove(ticks)) {}
   LM->stop();
   RM->stop();
 }
-}
+
 
