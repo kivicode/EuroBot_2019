@@ -1,51 +1,57 @@
+#define TicksInRotation 216
+#define WheelRadiusMM 38.5
+#define WheelLength WheelRadiusMM * PI
+
 class Motor {
   private:
-    int pinA;
+    int pinF;
     int pinB;
+    int pinS;
     int encoder;
     int state;
     int lastState;
-    int counter;
+    int counter = 0;
 
   public:
     void forward() {
-      digitalWrite(pinA, LOW);
-      digitalWrite(pinB, HIGH);
-      state = digitalRead(encoder);
-      lastState = state;
+      analogWrite(pinS, 80);
+      digitalWrite(pinB, LOW);
+      digitalWrite(pinF, HIGH);
       counter = 0;
     }
 
     void backward() {
-      digitalWrite(pinA, HIGH);
-      digitalWrite(pinB, LOW);
-      state = digitalRead(encoder);
-      lastState = state;
+      analogWrite(pinS, 127);
+      digitalWrite(pinB, HIGH);
+      digitalWrite(pinF, LOW);
       counter = 0;
     }
 
     void stop() {
-      digitalWrite(pinA, LOW);
+      digitalWrite(pinF, LOW);
       digitalWrite(pinB, LOW);
+      counter = 0;
     }
 
-    bool shouldMove(int ticks) {
-      if (counter < ticks) {
-        state = digitalRead(encoder);
-        if (state != lastState && digitalRead(encoder) != state) {
-          counter++;
-          lastState = state;
-        }
+    int getPassed() {
+      state = digitalRead(encoder);
+      if (lastState != state) {
+        lastState = state;
+        counter++;
       }
+      return ((float)counter / TicksInRotation) * WheelLength / 20;
     }
 
+    Motor(int F, int B, int S, int E, bool reversed) {
+      pinF = reversed ? B : F;
+      pinB = reversed ? F : B;
+      pinS = S;
+      encoder = E;
 
-    Motor(int A, int B, int encoder, bool reversed) {
-      pinA = reversed ? B : A;
-      pinB = reversed ? A : B;
-      pinMode(A, OUTPUT);
+      pinMode(F, OUTPUT);
       pinMode(B, OUTPUT);
-      pinMode(encoder, OUTPUT);
+      pinMode(S, OUTPUT);
+      pinMode(encoder, INPUT_PULLUP);
     }
 };
 
