@@ -1,49 +1,90 @@
-Motor LM = Motor(LeftMotorForwardPin, LeftMotorBackwardPin, LeftMotorSpeedPin, LeftEncoderPin, false);
-Motor RM = Motor(RightMotorForwardPin, RightMotorBackwardPin, RightMotorSpeedPin, RightEncoderPin, true);
 
-void forward(int cm) {
-  LM.forward();
-  RM.forward();
-  //  int start = millis();
-  while (LM.getPassed() < cm && RM.getPassed() < cm) {
-    Serial.println(LM.getPassed());
-  }
-  //  delay(1000);
-  LM.stop();
-  RM.stop();
-  LM.backward();
-  RM.backward();
-  delay(100);
-  LM.stop();
-  RM.stop();
-  //  RM.stop();
+float TicksInRotation = 400;
+float WheelRadius = 4;
+float WheelLength = WheelRadius * PI * 2;
+
+void forward(int dist) {
+
+  long int ticks = cm2tick(dist);
+  Serial.println(ticks);
+  analogWrite(LeftMotorSpeedPin, 100);
+  analogWrite(RightMotorSpeedPin, 120);
+
+  digitalWrite(LeftMotorForwardPin, HIGH);
+  digitalWrite(RightMotorForwardPin, HIGH);
+  go(ticks);
+
+  digitalWrite(LeftMotorForwardPin, LOW);
+  digitalWrite(RightMotorForwardPin, LOW);
 }
 
-//void backward(int cm) {
-//  LM.backward();
-//  RM.backward();
-//  go(cm);
-//}
-//
-//void left(int deg) {
-//
-//}
-//
-//void right(int deg) {
-//
-//}
-//
-//long int cm2ticks(int cm) {
-//  int mm = cm * 10;
-//  long int ticks = (mm / WheelLength) * TicksInRotation;
-//  return ticks;
-//}
-//
-//void go(int cm) {
-//  long int ticks = cm2ticks(cm);
-//  while (LM.shouldMove(ticks) || RM.shouldMove(ticks)) {}
-//  LM.stop();
-//  RM.stop();
-//}
-//
+void backward(int dist) {
+
+  long int ticks = cm2tick(dist);
+  Serial.println(ticks);
+  analogWrite(LeftMotorSpeedPin, 100);
+  analogWrite(RightMotorSpeedPin, 120);
+
+  digitalWrite(LeftMotorBackwardPin, HIGH);
+  digitalWrite(RightMotorBackwardPin, HIGH);
+  go(ticks);
+
+  digitalWrite(LeftMotorBackwardPin, LOW);
+  digitalWrite(RightMotorBackwardPin, LOW);
+}
+
+void left(int dist) {
+
+  long int ticks = cm2tick(dist);
+  Serial.println(ticks);
+  analogWrite(LeftMotorSpeedPin, 200);
+  analogWrite(RightMotorSpeedPin, 220);
+
+  digitalWrite(LeftMotorBackwardPin, HIGH);
+  digitalWrite(RightMotorForwardPin, HIGH);
+  go(ticks);
+
+  digitalWrite(LeftMotorBackwardPin, LOW);
+  digitalWrite(RightMotorForwardPin, LOW);
+}
+
+void right(int dist) {
+
+  long int ticks = cm2tick(dist);
+  Serial.println(ticks);
+  analogWrite(LeftMotorSpeedPin, 200);
+  analogWrite(RightMotorSpeedPin, 220);
+
+  digitalWrite(LeftMotorForwardPin, HIGH);
+  digitalWrite(RightMotorBackwardPin, HIGH);
+  go(ticks);
+
+  digitalWrite(LeftMotorForwardPin, LOW);
+  digitalWrite(RightMotorBackwardPin, LOW);
+}
+
+long int cm2tick(int cm){
+  float rotates = (float)cm / (float)WheelLength;
+  return rotates * TicksInRotation;
+}
+
+void go(int ticks){
+  int counterL = 0;
+  int lStateL = 0;
+  int counterR = 0;
+  int lStateR = 0;
+  while (counterL <= ticks && counterR <= ticks) {
+    int sL = digitalRead(LeftEncoderPin);
+    if (sL != lStateL) {
+      lStateL = sL;
+      counterL++;
+    }
+
+    int sR = digitalRead(LeftEncoderPin);
+    if (sR != lStateR) {
+      lStateR = sR;
+      counterR++;
+    }
+  }
+}
 
