@@ -4,7 +4,6 @@ const byte numChars = 32;
 char receivedChars[numChars];
 
 String getString() {
-  //if (Serial.available() > 0) {
   static boolean recvInProgress = false;
   static byte ndx = 0;
   char startMarker = '<';
@@ -39,9 +38,6 @@ String getString() {
   } else {
     return "";
   }
-  //  } else {
-  //    return "";
-  //  }
 
 }
 
