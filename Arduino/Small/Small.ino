@@ -1,4 +1,4 @@
-/*    Пины    */
+/*        */
 #define LeftMotorBackwardPin 4
 #define LeftMotorForwardPin 3
 #define LeftMotorSpeedPin 2
@@ -12,7 +12,7 @@
 void setup() {
   Serial.begin(9600);
 
-  /*    Инициализация пинов    */
+  /*         */
   pinMode(LeftMotorForwardPin, OUTPUT);
   pinMode(LeftMotorBackwardPin, OUTPUT);
 
@@ -25,36 +25,53 @@ void setup() {
   pinMode(LeftEncoderPin, INPUT_PULLUP);
   pinMode(RightEncoderPin, INPUT_PULLUP);
 
-  Serial.setTimeout(150); // Что бы не было задержки при приёме строк
+  Serial.setTimeout(150);
 }
 
 
-String SUCC = "~";  // символ успешного выполнения команды (см. api.py)
+String SUC = "~";  // символ успешного выполнения команды (см. api.py)
+String ERR = "|";  // символ ошибки выполнения команды (см. api.py)
+String REC = "-";  // символ успешного принятния команды (см. api.py)
 
 
 /*    Команды представленны в виде имя(параметр1, параметр2)    */
 void loop() {
   while (Serial.available() > 0) {  // ждём команду
-    String in = String(Serial.readString());  // считывание строки
+    String in = String(Serial.readStringUntil('\n'));  // считывание строки
     if (in != "") {
       String cmd = split(in, '(', 0);  // находим имя команды
       String params = split(split(in, '(', 1), ')', 0);  // массив с параметрами
       if (cmd == "cf") {  // калибровка: вперёд
+        Serial.print(REC);  // подтверждение принятия
         forward(2);
-        Serial.print(SUCC);  // подтверждение выполнения
+        Serial.print(SUC);  // подтверждение выполнения
       }
       else if (cmd == "cb") {  // калибровка: назад
+        Serial.print(REC);  // подтверждение принятия
         backward(2);
-        Serial.print(SUCC);  // подтверждение выполнения
+        Serial.print(SUC);  // подтверждение выполнения
       }
       else if (cmd == "cl") {  // калибровка: влево
+        Serial.print(REC);  // подтверждение принятия
         left(1);
-        Serial.print(SUCC);  // подтверждение выполнения
+        Serial.print(SUC);  // подтверждение выполнения
       }
       else if (cmd == "cr") {  // калибровка: вправо
+        Serial.print(REC);  // подтверждение принятия
         right(1);
-        Serial.print(SUCC);  // подтверждение выполнения
+        Serial.print(SUC);  // подтверждение выполнения
       }
+      else {
+        Serial.print(in);
+        Serial.print(REC);  // подтверждение принятия
+        delay(100);
+        Serial.print(ERR);
+      }
+    } else {
+      Serial.print(in);
+      Serial.print(REC);  // подтверждение принятия
+      delay(100);
+      Serial.print(ERR);
     }
   }
 }

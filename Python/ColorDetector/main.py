@@ -1,4 +1,5 @@
 from utils import *  # импорт некоторых полезных функци
+from api import *
 
 POINTS = []
 
@@ -9,6 +10,8 @@ uppers = [[0] * 3] * 3  # массив с верхними уровнями дл
 
 pucks = {'purple': []}  # массив с шайбами
 
+start_grabbing = False
+
 
 def press(event, x, y, a, b):  # функция выбора пикселя для настройки цвета
     if event == cv2.EVENT_LBUTTONDBLCLK:
@@ -16,7 +19,7 @@ def press(event, x, y, a, b):  # функция выбора пикселя дл
 
 
 def calibrate_purple(pixel, name=PURPLE):  # функция настройи по заданному цвету на изображении
-    sensitivity: int = 60
+    sensitivity: int = 30
     upper = np.array([pixel[0] + sensitivity, pixel[1] + sensitivity, pixel[2] + 2 * sensitivity])
     lower = np.array([pixel[0] - sensitivity, pixel[1] - sensitivity, pixel[2] - 2 * sensitivity])
     lowers[name] = lower
@@ -37,10 +40,14 @@ def setup():  # первый цикл настройки, вызывается �
             pix = hsv[POINTS[0][1], POINTS[0][0]]
             calibrate_purple(pix)
             break
+    initialize()
 
 
 def main():  # основной цикл
+    global start_grabbing
     orig = getImage()
+
+    command = ord('p')
 
     try:
         blurred = cv2.GaussianBlur(orig, (11, 11), 0)  # блюр
@@ -76,27 +83,35 @@ def main():  # основной цикл
                 y_max = y
                 goal = purple
         text = ""
-        goal_y = 560  # целевое значение по игреку (для манипулятора)
-        tolerance_x = 15  # чуствительность по иксу
-        tolerance_y = 30  # чуствительность по игреку
+        goal_y = 615  # целевое значение по игреку (для манипулятора)
+        tolerance_x = 80  # чуствительность по иксу
+        tolerance_y = 50  # чуствительность по игреку
+        # if not start_grabbing:
         if abs(goal[0] - (w / 2)) < tolerance_x:
             text = "OK"
         elif goal[0] < w / 2:
             text = "Turn Left"
+            do('cl()\n')
         elif goal[0] > w / 2:
             text = "Turn Right"
+            do('cr')
 
         if abs(goal[1] - goal_y) < tolerance_y:
             text += "  OK"
         elif goal[1] < goal_y:
             text += "  Go Forward"
+            do('cf')
         elif goal[1] > goal_y:
             text += "  Go Backward"
+            do('cb')
+
+        if text == 'OK  OK':
+            sys.exit()
+
         cv2.circle(orig, goal, 10, (0, 0, 255), -1)  # отмечаем целевую шайбу красным цветом
         cv2.putText(orig, text, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0),
                     3)  # рисуем указания по движению робота
 
-        cv2.imshow("Mask", mask)
     except Exception as exception:
         print("Color detection runtime error: %s" % exception)
         pass
@@ -106,14 +121,19 @@ def main():  # основной цикл
 
 setup()
 
-
 while True:  # вызывает главную функцию каждый кадр
-    try:
-        main()
-    except Exception as e:
-        print(e)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    key = cv2.waitKey(1) & 0xFF
+    main()
+    # print(key if key != 255 else '')
+    if key == ord('f'):
+        do('calibrate forward')
+    elif key == ord('b'):
+        do('calibrate backward')
+    elif key == ord('l'):
+        do('cl()')
+    elif key == ord('r'):
+        do('calibrate right')
+    if key == ord('q'):
         break
 
 cv2.destroyAllWindows()

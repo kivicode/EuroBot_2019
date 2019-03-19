@@ -1,7 +1,9 @@
 import glob
 import sys
 import serial
+import time
 
+RECIEVED = '-'  # символ прянития команды
 SUCCESS = '~'  # символ успешного выполнения
 REFUSED = '|'  # символ ошибки выполнения
 
@@ -9,7 +11,13 @@ API = {'forward': 'f(%d)',  # Ехать вперёд на Х см
        'backward': 'b(%d)',  # Ехать назад на Х см
        'left': 'l(%d)',  # Повернуть влево на Х градусов
        'right': 'r(%d)',  # Повернуть вправо на Х градусов
-       'manipulator up': 'mu()',  # Поднять манипулятор
+
+       'calibrate forward': 'cf()',
+       'calibrate backward': 'cb()',
+       'calibrate left': 'cl()',
+       'calibrate right': 'cr()',
+
+       'manipulator up': 'mu()',
        'manipulator down': 'md()'  # Опустить манипулятор + взять присоской
        }
 
@@ -23,7 +31,7 @@ def select_serial():
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
         ports = glob.glob('/dev/tty[A-Za-z]*')
     elif sys.platform.startswith('darwin'):
-        ports = glob.glob('/dev/tty.*')
+        ports = glob.glob('/dev/tty.usb*')
     else:
         print('Unsupported platform')
 
@@ -35,18 +43,21 @@ def select_serial():
             result.append(port)
         except (OSError, serial.SerialException):
             pass
-    return result
+    return result[0]
 
 
-try:
-    ser = serial.Serial(select_serial(), 9600, timeout=1)
-except Exception as ignore:
-    print("Arduino not found")
+def initialize():
+    global ser
+    try:
+        ser = serial.Serial(select_serial(), 9600, timeout=.1)
+        time.sleep(4)
+    except Exception:
+        print("Arduino not found")
 
 
 def send(cmd):
     """ Отправка строки в сериал """
-    ser.write(str.encode(cmd))
+    ser.write((cmd + '\n').encode('utf-8'))
 
 
 def read():
@@ -57,24 +68,34 @@ def read():
     return line.decode()
 
 
-def wait_for(symbol):
+def wait_for(symbol, max_time=-1):
     """ Ждёт, пока не придёт заданный символ """
+    start_time = 0
+    if max_time != -1:
+        start_time = time.time()
     while True:
+        if max_time != -1 and time.time() - start_time >= max_time:
+            return -2
         data = read()
-        if data == symbol:  # выходит из цикла, если передётся параметр
-            break
-        elif data == REFUSED:  # Возвращает код ошибки, если ардуино не смогла выплнить
+        if data.find(symbol) != -1:  # выходит из цикла, если передётся параметр
+            print(data)
+            return 1
+        elif data.find(REFUSED) != -1:  # Возвращает код ошибки, если ардуино не смогла выплнить
+            print(data)
             return -1
-    return 1
 
 
 def do(command, param=None):
     """Пыается выплнить и ждёт, пока не придёт ответ"""
-    request = API[command]  # генерация запроса, если передётся параметр
+    request = command  # генерация запроса, если передётся параметр
     if not param is None:  # генерация запроса, если передётся параметр
         request = request % param  # передача парамтра в запрос
-    send(request)  # отправка запроса
-    if wait_for(SUCCESS) == -1:
+    send(request + '\n')  # отправка запроса
+    # print(request + '\n')
+    if wait_for(RECIEVED, 1) == -2:
+        print(f'Command was not recieved {request}')
+        return
+    if wait_for(SUCCESS, 1) == -1:
         print("Something happened while executing this command: %s" % request)
     else:
         print("Successfully complete: %s" % request)

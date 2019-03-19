@@ -1,4 +1,3 @@
-
 float TicksInRotation = 400;
 float WheelRadius = 4;
 float WheelLength = WheelRadius * PI * 2;
@@ -6,7 +5,6 @@ float WheelLength = WheelRadius * PI * 2;
 void forward(int dist) {
 
   long int ticks = cm2tick(dist);
-  Serial.println(ticks);
   analogWrite(LeftMotorSpeedPin, 100);
   analogWrite(RightMotorSpeedPin, 120);
 
@@ -21,7 +19,6 @@ void forward(int dist) {
 void backward(int dist) {
 
   long int ticks = cm2tick(dist);
-  Serial.println(ticks);
   analogWrite(LeftMotorSpeedPin, 100);
   analogWrite(RightMotorSpeedPin, 120);
 
@@ -36,7 +33,6 @@ void backward(int dist) {
 void left(int dist) {
 
   long int ticks = cm2tick(dist);
-  Serial.println(ticks);
   analogWrite(LeftMotorSpeedPin, 200);
   analogWrite(RightMotorSpeedPin, 220);
 
@@ -51,7 +47,6 @@ void left(int dist) {
 void right(int dist) {
 
   long int ticks = cm2tick(dist);
-  Serial.println(ticks);
   analogWrite(LeftMotorSpeedPin, 200);
   analogWrite(RightMotorSpeedPin, 220);
 
