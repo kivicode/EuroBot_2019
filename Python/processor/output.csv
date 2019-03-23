@@ -1,88 +1,16 @@
-Task,"Напишите программу, which in the sequence of natural numbers determines the sum of multiples of 6.
- The program receives the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number that is a multiple of 6.
- The number of numbers does not exceed 100.
- The numbers entered do not exceed 300.
- The program should output one number - the sum of multiples of 6.
-","Напишите программу, which in the sequence of natural numbers determines the number of multiples of 4.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number that is a multiple of 4.
- The number of numbers does not exceed 1000.
- The numbers entered do not exceed 30,000.
- The program must output one number - the number of numbers that are multiples of 4.
-","Напишите программуwhich in the sequence of natural numbers determines the minimum number that is a multiple of 3.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number that is a multiple of 3.
- The number of numbers does not exceed 1000.
- The numbers entered do not exceed 30,000.
- The program should output one number — the minimum number that is a multiple of 3.
-","Напишите программу, which in the sequence of natural numbers determines the sum of multiples of 3.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number that is a multiple of 3.
- The number of numbers does not exceed 100.
- The numbers entered do not exceed 300.
- The program should output one number - the sum of multiples of 3.
-","Напишите программу, which in the sequence of natural numbers determines the maximum number that is a multiple of 4.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number that is a multiple of 4.
- The number of numbers does not exceed 1000.
- The numbers entered do not exceed 30,000.
- The program should output one number — the maximum number that is a multiple of 4.
-","Напишите программу, which in the sequence of natural numbers determines the sum of numbers ending in 4.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number ending in 4.
- The number of numbers does not exceed 1000.
- The entered numbers do not exceed 30,000.
- The program should output one number - the sum of the numbers ending in 4.
-","Напишите программу, which in the sequence of natural numbers determines the number of numbers ending in 3.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number ending in 3.
- The number of numbers does not exceed 1000.
- The entered numbers do not exceed 30,000.
- The program should output one number - the number of numbers ending in 3.
-","Напишите программу, which in the sequence of natural numbers determines the maximum number ending in 3.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number ending in 3.
- The number of numbers does not exceed 1000.
- The entered numbers do not exceed 30,000.
- The program should output one number - the maximum number ending in 3.
-","Напишите программу, which in the sequence of natural numbers determines the minimum number ending in 6.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number ending in 6.
- The number of numbers does not exceed 1000.
- The entered numbers do not exceed 30,000.
- The program should output one number - the minimum number ending in 6.
-","Напишите программу, which in the sequence of natural numbers determines the sum of numbers ending in 3.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number ending in 3.
- The number of numbers does not exceed 100.
- The entered numbers do not exceed 300.
- The program must output one number - the sum of the numbers ending in 3.
-","Напишите программу, which in the sequence of natural numbers determines the number of numbers ending in 6.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number ending in 6.
- The number of numbers does not exceed 1000.
- The entered numbers do not exceed 30,000.
- The program should output one number - the number of numbers ending in 6.
-","Напишите программу, which in the sequence of natural numbers determines the minimum number ending in 4.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number ending in 4.
- The number of numbers does not exceed 1000.
- The entered numbers do not exceed 30,000.
- The program should output one number - the minimum number ending in 4.
-","Напишите программу, which in the sequence of natural numbers determines the sum of numbers that are multiples of 5.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number that is a multiple of 5.
- The number of numbers does not exceed 100.
- The numbers entered do not exceed 300.
- The program should output one number - the sum of multiples of 5.
-","Напишите программу, which in the sequence of natural numbers determines the number of multiples of 3.
- The program receives as input the number of numbers in the sequence, and then the numbers themselves.
- In the sequence there is always a number that is a multiple of 3.
- The number of numbers does not exceed 100.
- The numbers entered do not exceed 300.
- The program must output one number - the number of numbers that are multiples of 3.
-"
+Task,"Напишите программу that in the sequence of natural numbers determines the sum of the numbers that are multiples of 6.
+ The program takes on input the number of numbers in the sequence, and then the numbers themselves.
+ In the sequence is always a number that is a multiple of 6.
+ The number of numbers less than 100.
+ Input number does not exceed 300.
+ The program should print a single number — the sum of the multiples of 6.
+ ","Напишите программу that in the sequence of natural numbers determines the number of multiples of 4.
+ The program takes on input the number of numbers in the sequence, and then the numbers themselves.
+ In the sequence is always a number that is a multiple of 4.
+ The number of integers not exceeding 1000.
+ Input number does not exceed 30 000.
+ The program should print one integer — the number of multiples of 4.
+ "
 Answer,"n = int(input())
 mult = 6
 sum = 0
@@ -94,114 +22,6 @@ for i in range(n):
 
 print(sum)","n = int(input())
 mult = 4
-num = 0
-for i in range(n):
-	s = input()
-	number = int(s)
-	if number % mult == 0 :
-		num += 1
-
-print(num)","n = int(input())
-mult = 3
-min = 10e9
-for i in range(n):
-	s = input()
-	number = int(s)
-	if number % mult == 0 and number < min:
-		min = number
-
-print(min)","n = int(input())
-mult = 3
-sum = 0
-for i in range(n):
-	s = input()
-	number = int(s)
-	if number % mult == 0 :
-		sum += number
-
-print(sum)","n = int(input())
-mult = 4
-max = -10e9
-for i in range(n):
-	s = input()
-	number = int(s)
-	if number % mult == 0 and number > max:
-		max = number
-
-print(max)","n = int(input())
-mult = 0
-sum = 0
-for i in range(n):
-	s = input()
-	number = int(s)
-	if  s.endswith('4') :
-		sum += number
-
-print(sum)","n = int(input())
-mult = 0
-num = 0
-for i in range(n):
-	s = input()
-	number = int(s)
-	if  s.endswith('3') :
-		num += 1
-
-print(num)","n = int(input())
-mult = 0
-max = -10e9
-for i in range(n):
-	s = input()
-	number = int(s)
-	if  s.endswith('3') and number > max:
-		max = number
-
-print(max)","n = int(input())
-mult = 0
-min = 10e9
-for i in range(n):
-	s = input()
-	number = int(s)
-	if  s.endswith('6') and number < min:
-		min = number
-
-print(min)","n = int(input())
-mult = 0
-sum = 0
-for i in range(n):
-	s = input()
-	number = int(s)
-	if  s.endswith('3') :
-		sum += number
-
-print(sum)","n = int(input())
-mult = 0
-num = 0
-for i in range(n):
-	s = input()
-	number = int(s)
-	if  s.endswith('6') :
-		num += 1
-
-print(num)","n = int(input())
-mult = 0
-min = 10e9
-for i in range(n):
-	s = input()
-	number = int(s)
-	if  s.endswith('4') and number < min:
-		min = number
-
-print(min)","n = int(input())
-mult = 5
-sum = 0
-for i in range(n):
-	s = input()
-	number = int(s)
-	if number % mult == 0 :
-		sum += number
-
-print(sum)","n = int(input())
-mult = 3
 num = 0
 for i in range(n):
 	s = input()

@@ -3,7 +3,10 @@ import cv2.aruco as aruco
 import numpy as np
 import imutils
 
-camA = cv2.VideoCapture(0)
+camA = cv2.VideoCapture(1)
+
+camA.set(cv2.CAP_PROP_FRAME_WIDTH, 40)
+camA.set(cv2.CAP_PROP_FRAME_HEIGHT, 30)
 
 fieldWidth = 730
 fieldHeight = 345
@@ -35,7 +38,7 @@ def nothing(x):
 
 def getImage():
     _, frameA = camA.read()
-    return frameA
+    return cv2.resize(cv2.flip(frameA, 0), (640, 480))
     # return cv2.imread('images/test_img.jpg')
 
 

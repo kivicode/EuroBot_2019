@@ -1,4 +1,15 @@
-/*        */
+#include <Wire.h>
+#include "PCA9685.h"
+
+int L = 0;
+int R = 1;
+
+PCA9685 driver;
+PCA9685_ServoEvaluator pwmServo(102, 470);
+
+int angles[5] = {0, 0, 0, 0, 0};
+int pomp = 46;
+
 #define LeftMotorBackwardPin 4
 #define LeftMotorForwardPin 3
 #define LeftMotorSpeedPin 2
@@ -9,10 +20,26 @@
 #define RightMotorSpeedPin 7
 #define RightEncoderPin 6
 
+String SUC = "~";  // символ успешного выполнения команды (см. api.py)
+String ERR = "|";  // символ ошибки выполнения команды (см. api.py)
+String REC = "-";  // символ успешного принятния команды (см. api.py)
+
 void setup() {
+  Wire.begin();
+  Wire.setClock(400000);
+  driver.resetDevices();
+  driver.init(B000000);
+  driver.setPWMFrequency(50);
   Serial.begin(9600);
+  Serial.println("StarT");
+  disablePomp();
+  //  straight();
+  setAngle(1, 45);
+  ostrich();
+  //  delay(1000);
 
   /*         */
+  pinMode(pomp, OUTPUT);
   pinMode(LeftMotorForwardPin, OUTPUT);
   pinMode(LeftMotorBackwardPin, OUTPUT);
 
@@ -26,13 +53,8 @@ void setup() {
   pinMode(RightEncoderPin, INPUT_PULLUP);
 
   Serial.setTimeout(150);
+//  take();
 }
-
-
-String SUC = "~";  // символ успешного выполнения команды (см. api.py)
-String ERR = "|";  // символ ошибки выполнения команды (см. api.py)
-String REC = "-";  // символ успешного принятния команды (см. api.py)
-
 
 /*    Команды представленны в виде имя(параметр1, параметр2)    */
 void loop() {
@@ -59,6 +81,20 @@ void loop() {
       else if (cmd == "cr") {  // калибровка: вправо
         Serial.print(REC);  // подтверждение принятия
         right(1);
+        Serial.print(SUC);  // подтверждение выполнения
+      }
+      else if (cmd == "f") {
+        int dist = split(params, ",", 0).toInt();
+        forward(dist);
+      }
+      else if (cmd == "get") {  // калибровка: вперёд
+        Serial.print(REC);  // подтверждение принятия
+        take();
+        Serial.print(SUC);  // подтверждение выполнения
+      }
+      else if (cmd == "o") {  // калибровка: вперёд
+        Serial.print(REC);  // подтверждение принятия
+        ostrich();
         Serial.print(SUC);  // подтверждение выполнения
       }
       else {

@@ -3,7 +3,7 @@ from utils import *
 
 if __name__ == '__main__':
     data = {'Task': ['Answer']}
-    for i in range(15):
+    for i in range(2):
         try:
             print(f'Start parsing number {i+1}')
             orig = parser.parse(i)
@@ -14,6 +14,6 @@ if __name__ == '__main__':
             print(out_task)
             print(program)
             data['Напишите программу' + out_task] = program
-        except:
-            pass
+        except Exception as e:
+            print(e)
     generate_csv(data)

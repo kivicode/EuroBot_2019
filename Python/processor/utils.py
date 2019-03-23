@@ -1,5 +1,5 @@
-from googletrans import Translator
 import pandas
+import requests
 
 variables = {'mult': ''}
 use_not = False
@@ -13,9 +13,12 @@ end_str = ''
 
 
 def translate(text):
-    translator = Translator()
-    return translator.translate(text).text
-
+    eng_text = text
+    token = 'trnsl.1.1.20190320T150251Z.23faa58ef5466926.d0d4f698d428eb12180ed2e4f187b8c6687c66f6'
+    url_trans = 'https://translate.yandex.net/api/v1.5/tr.json/translate'
+    trans_option = {'key':token, 'lang':'ru-en', 'text': eng_text}
+    webRequest = requests.get(url_trans, params = trans_option)
+    return webRequest.text.split('\"text\"')[1].split('\"')[1].split('\"')[0]
 
 def get_result_task(text):
     f = Finder(text)
@@ -34,7 +37,7 @@ def set_vars(text):
         variables['min'] = '10e9'
     if f.find('sum'):
         variables['sum'] = '0'
-    if f.find('number of numbers'):
+    if f.find('number of numbers') or f.find('the number of'):
         variables['num'] = '0'
 
     mult_txt = '0'

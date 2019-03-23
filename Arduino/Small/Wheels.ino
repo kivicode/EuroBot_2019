@@ -6,7 +6,7 @@ void forward(int dist) {
 
   long int ticks = cm2tick(dist);
   analogWrite(LeftMotorSpeedPin, 100);
-  analogWrite(RightMotorSpeedPin, 120);
+  analogWrite(RightMotorSpeedPin, 45);
 
   digitalWrite(LeftMotorForwardPin, HIGH);
   digitalWrite(RightMotorForwardPin, HIGH);
@@ -19,8 +19,8 @@ void forward(int dist) {
 void backward(int dist) {
 
   long int ticks = cm2tick(dist);
-  analogWrite(LeftMotorSpeedPin, 100);
-  analogWrite(RightMotorSpeedPin, 120);
+  analogWrite(LeftMotorSpeedPin, 200);
+  analogWrite(RightMotorSpeedPin, 90);
 
   digitalWrite(LeftMotorBackwardPin, HIGH);
   digitalWrite(RightMotorBackwardPin, HIGH);
@@ -34,7 +34,7 @@ void left(int dist) {
 
   long int ticks = cm2tick(dist);
   analogWrite(LeftMotorSpeedPin, 200);
-  analogWrite(RightMotorSpeedPin, 220);
+  analogWrite(RightMotorSpeedPin, 90);
 
   digitalWrite(LeftMotorBackwardPin, HIGH);
   digitalWrite(RightMotorForwardPin, HIGH);
@@ -48,7 +48,7 @@ void right(int dist) {
 
   long int ticks = cm2tick(dist);
   analogWrite(LeftMotorSpeedPin, 200);
-  analogWrite(RightMotorSpeedPin, 220);
+  analogWrite(RightMotorSpeedPin, 90);
 
   digitalWrite(LeftMotorForwardPin, HIGH);
   digitalWrite(RightMotorBackwardPin, HIGH);
@@ -58,27 +58,21 @@ void right(int dist) {
   digitalWrite(RightMotorBackwardPin, LOW);
 }
 
-long int cm2tick(int cm){
+long int cm2tick(int cm) {
   float rotates = (float)cm / (float)WheelLength;
   return rotates * TicksInRotation;
 }
 
-void go(int ticks){
+void go(int ticks) {
   int counterL = 0;
   int lStateL = 0;
   int counterR = 0;
   int lStateR = 0;
-  while (counterL <= ticks && counterR <= ticks) {
-    int sL = digitalRead(LeftEncoderPin);
+  while (counterL <= ticks) {
+    int sL = digitalRead(RightEncoderPin);
     if (sL != lStateL) {
       lStateL = sL;
       counterL++;
-    }
-
-    int sR = digitalRead(LeftEncoderPin);
-    if (sR != lStateR) {
-      lStateR = sR;
-      counterR++;
     }
   }
 }

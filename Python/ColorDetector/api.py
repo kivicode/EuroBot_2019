@@ -1,11 +1,14 @@
-import glob
-import sys
 import serial
 import time
+
+serials = {}
 
 RECIEVED = '-'  # символ прянития команды
 SUCCESS = '~'  # символ успешного выполнения
 REFUSED = '|'  # символ ошибки выполнения
+
+WHEELS = 0
+MANIPULATOR = 1
 
 API = {'forward': 'f(%d)',  # Ехать вперёд на Х см
        'backward': 'b(%d)',  # Ехать назад на Х см
@@ -17,50 +20,30 @@ API = {'forward': 'f(%d)',  # Ехать вперёд на Х см
        'calibrate left': 'cl()',
        'calibrate right': 'cr()',
 
+       'grab': 'get()',
+
        'manipulator up': 'mu()',
        'manipulator down': 'md()'  # Опустить манипулятор + взять присоской
        }
 
 
-def select_serial():
-    """ Автоматически выбирает сериал порт """
-    # MAGIC CODE
-    ports = []
-    if sys.platform.startswith('win'):
-        ports = ['COM%s' % (i + 1) for i in range(256)]
-    elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
-        ports = glob.glob('/dev/tty[A-Za-z]*')
-    elif sys.platform.startswith('darwin'):
-        ports = glob.glob('/dev/tty.usb*')
-    else:
-        print('Unsupported platform')
-
-    result = []
-    for port in ports:
-        try:
-            s = serial.Serial(port)
-            s.close()
-            result.append(port)
-        except (OSError, serial.SerialException):
-            pass
-    return result[0]
-
-
 def initialize():
-    global ser
-    try:
-        ser = serial.Serial(select_serial(), 9600, timeout=.1)
-        time.sleep(4)
-    except Exception:
-        print("Arduino not found")
+    global ser_wheels
+    ser_wheels = serial.Serial('/dev/tty.usbmodem14201', 9600, timeout=1)
+    # ser_manipulator = serial.Serial('/dev/tty.wchusbserial1410', 9600, timeout=.1)
+    # serials[MANIPULATOR] = ser_manipulator
+    time.sleep(1)
+    print('Can start')
+    # except Exception:
+    #     print("Arduino not found")
 
 
-def send(cmd):
+def send(ser, cmd):
     """ Отправка строки в сериал """
     ser.write((cmd + '\n').encode('utf-8'))
 
 
-def read():
+def read(ser):
     """ Читает данные из сериал """
     # CHECK: Maybe delete decoding
     # CHECK: Check for the last char '\n'
@@ -68,7 +51,7 @@ def read():
     return line.decode()
 
 
-def wait_for(symbol, max_time=-1):
+def wait_for(ser, symbol, max_time=-1):
     """ Ждёт, пока не придёт заданный символ """
     start_time = 0
     if max_time != -1:
@@ -76,7 +59,7 @@ def wait_for(symbol, max_time=-1):
     while True:
         if max_time != -1 and time.time() - start_time >= max_time:
             return -2
-        data = read()
+        data = read(ser)
         if data.find(symbol) != -1:  # выходит из цикла, если передётся параметр
             print(data)
             return 1
@@ -88,14 +71,15 @@ def wait_for(symbol, max_time=-1):
 def do(command, param=None):
     """Пыается выплнить и ждёт, пока не придёт ответ"""
     request = command  # генерация запроса, если передётся параметр
+    ser = ser_wheels
     if not param is None:  # генерация запроса, если передётся параметр
         request = request % param  # передача парамтра в запрос
-    send(request + '\n')  # отправка запроса
+    send(ser, request + '\n')  # отправка запроса
     # print(request + '\n')
-    if wait_for(RECIEVED, 1) == -2:
+    if wait_for(ser, RECIEVED, 1) == -2:
         print(f'Command was not recieved {request}')
         return
-    if wait_for(SUCCESS, 1) == -1:
+    if wait_for(ser, SUCCESS, 1) == -1:
         print("Something happened while executing this command: %s" % request)
     else:
         print("Successfully complete: %s" % request)
