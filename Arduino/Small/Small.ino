@@ -35,8 +35,16 @@ void setup() {
   disablePomp();
   //  straight();
   setAngle(1, 45);
+  setAngle(4, 10);
   ostrich();
+
   //  delay(1000);
+  //
+  //  setAngle(0, 0);
+  //  setAngle(1, 80);
+  //  setAngle(3, 40);
+  //  delay(1000);
+  //  straight();
 
   /*         */
   pinMode(pomp, OUTPUT);
@@ -53,10 +61,19 @@ void setup() {
   pinMode(RightEncoderPin, INPUT_PULLUP);
 
   Serial.setTimeout(150);
-//  take();
+  //  take();
+
+//  forward(130);
+//  delay(1000);
+//  //  right(13);
+//  delay(1000);
+//  forward(25);
 }
 
 /*    Команды представленны в виде имя(параметр1, параметр2)    */
+/*
+   setAngle(1, 60) setAngle(2, -20) setAngle(3, -80)  setAngle(0, 15)  setAngle(1, 30) setAngle(1, 10)
+*/
 void loop() {
   while (Serial.available() > 0) {  // ждём команду
     String in = String(Serial.readStringUntil('\n'));  // считывание строки
@@ -65,7 +82,7 @@ void loop() {
       String params = split(split(in, '(', 1), ')', 0);  // массив с параметрами
       if (cmd == "cf") {  // калибровка: вперёд
         Serial.print(REC);  // подтверждение принятия
-        forward(2);
+        cf();
         Serial.print(SUC);  // подтверждение выполнения
       }
       else if (cmd == "cb") {  // калибровка: назад
@@ -87,6 +104,22 @@ void loop() {
         int dist = split(params, ",", 0).toInt();
         forward(dist);
       }
+      else if (cmd == "b") {
+        int dist = split(params, ",", 0).toInt();
+        backward(dist);
+      }
+      else if (cmd == "ccb") {
+        int dist = split(params, ",", 0).toInt();
+        backward_calib(dist);
+      }
+      else if (cmd == "l") {
+        int dist = split(params, ",", 0).toInt();
+        left(dist);
+      }
+      else if (cmd == "r") {
+        int dist = split(params, ",", 0).toInt();
+        right(dist);
+      }
       else if (cmd == "get") {  // калибровка: вперёд
         Serial.print(REC);  // подтверждение принятия
         take();
@@ -95,6 +128,20 @@ void loop() {
       else if (cmd == "o") {  // калибровка: вперёд
         Serial.print(REC);  // подтверждение принятия
         ostrich();
+        Serial.print(SUC);  // подтверждение выполнения
+      }
+      else if (cmd == "s") {
+        Serial.print(REC);  // подтверждение принятия
+        int s = 0, a = 0;
+        int n = sscanf(in.c_str() , "s(%d, %d)", &s, &a);
+        setAngle(s, a);
+        Serial.print(SUC);  // подтверждение выполнения
+      }
+      else if (cmd == "first") {
+        Serial.print(REC);  // подтверждение принятия
+        forward(130);
+        delay(1000);
+        forward(25);
         Serial.print(SUC);  // подтверждение выполнения
       }
       else {

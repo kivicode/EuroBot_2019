@@ -2,18 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3bfc9c83-521c-42ab-9e9e-8c8d4b40821b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../path_finder/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../path_finder/test.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../path_finder/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Arduino/Small/Manipulator.ino" beforeDir="false" afterPath="$PROJECT_DIR$/../../Arduino/Small/Manipulator.ino" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Arduino/Small/Small.ino" beforeDir="false" afterPath="$PROJECT_DIR$/../../Arduino/Small/Small.ino" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Arduino/Small/Wheels.ino" beforeDir="false" afterPath="$PROJECT_DIR$/../../Arduino/Small/Wheels.ino" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/vovinkomp.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/vovinkomp.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../processor/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../processor/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../processor/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../processor/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../processor/output.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../processor/output.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../processor/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/../processor/parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../processor/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../processor/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,27 +40,28 @@
     <session id="-848739146">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
+          <entry key="project.closed" value="6" />
           <entry key="project.open.time.1" value="2" />
           <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.12" value="1" />
-          <entry key="project.open.time.2" value="1" />
+          <entry key="project.open.time.2" value="2" />
           <entry key="project.open.time.22" value="1" />
           <entry key="project.open.time.3" value="1" />
-          <entry key="project.opened" value="7" />
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="113" />
-          <entry key="py" value="4512" />
+          <entry key="py" value="4664" />
           <entry key="txt" value="13" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="13" />
-          <entry key="Python" value="4625" />
+          <entry key="Python" value="4777" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -82,11 +80,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="155">
-              <caret line="57" column="12" selection-start-line="55" selection-start-column="12" selection-end-line="57" selection-end-column="12" />
+            <state relative-caret-position="273">
+              <caret line="59" column="64" selection-start-line="59" selection-start-column="64" selection-end-line="59" selection-end-column="64" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -97,21 +95,21 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
+            <state relative-caret-position="30">
               <caret line="5" column="25" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
-                <marker date="1553352317269" expanded="true" signature="434:437" ph="..." />
+                <marker date="1553438377992" expanded="true" signature="434:437" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="81">
-              <caret line="102" column="26" lean-forward="true" selection-start-line="102" selection-start-column="26" selection-end-line="102" selection-end-column="26" />
+            <state relative-caret-position="201">
+              <caret line="86" column="16" selection-start-line="86" selection-start-column="16" selection-end-line="86" selection-end-column="16" />
               <folding>
                 <element signature="e#0#55#0" expanded="true" />
               </folding>
@@ -144,8 +142,8 @@
         <option value="$PROJECT_DIR$/libraries.txt" />
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/utils.py" />
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/api.py" />
+        <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
   </component>
@@ -260,7 +258,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.32980973" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -290,31 +287,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
+        <state relative-caret-position="30">
           <caret line="5" column="25" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1553352317269" expanded="true" signature="434:437" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="102" column="26" lean-forward="true" selection-start-line="102" selection-start-column="26" selection-end-line="102" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#55#0" expanded="true" />
+            <marker date="1553438377992" expanded="true" signature="434:437" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/api.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="57" column="12" selection-start-line="55" selection-start-column="12" selection-end-line="57" selection-end-column="12" />
+        <state relative-caret-position="273">
+          <caret line="59" column="64" selection-start-line="59" selection-start-column="64" selection-end-line="59" selection-end-column="64" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="86" column="16" selection-start-line="86" selection-start-column="16" selection-end-line="86" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#55#0" expanded="true" />
           </folding>
         </state>
       </provider>

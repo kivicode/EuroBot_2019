@@ -3,10 +3,16 @@ float WheelRadius = 4;
 float WheelLength = WheelRadius * PI * 2;
 
 void forward(int dist) {
+  int times = dist/2;
+  for(int i = 0; i < times; i++){
+    cf();
+  }
+}
 
-  long int ticks = cm2tick(dist);
+void cf() {
+  long int ticks = cm2tick(2);
   analogWrite(LeftMotorSpeedPin, 100);
-  analogWrite(RightMotorSpeedPin, 45);
+  analogWrite(RightMotorSpeedPin, 60);
 
   digitalWrite(LeftMotorForwardPin, HIGH);
   digitalWrite(RightMotorForwardPin, HIGH);
@@ -25,6 +31,19 @@ void backward(int dist) {
   digitalWrite(LeftMotorBackwardPin, HIGH);
   digitalWrite(RightMotorBackwardPin, HIGH);
   go(ticks);
+
+  digitalWrite(LeftMotorBackwardPin, LOW);
+  digitalWrite(RightMotorBackwardPin, LOW);
+}
+
+void backward_calib(int dist) {
+
+  analogWrite(LeftMotorSpeedPin, 200);
+  analogWrite(RightMotorSpeedPin, 90);
+
+  digitalWrite(LeftMotorBackwardPin, HIGH);
+  digitalWrite(RightMotorBackwardPin, HIGH);
+  delay(dist);
 
   digitalWrite(LeftMotorBackwardPin, LOW);
   digitalWrite(RightMotorBackwardPin, LOW);

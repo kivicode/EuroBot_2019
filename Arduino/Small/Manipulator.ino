@@ -84,17 +84,6 @@ void putDown(int dir) {
 
 void grab(int angle, double distance, double height) {
   setAngle(0, angle, 10);
-  delay(10);
-
-
-  setAngle(1, 20);
-  delay(100);
-  setAngle(3, 40);
-  delay(100);
-  setAngle(1, 50);
-  delay(100);
-  setAngle(3, 20);
-  delay(100);
 
   delay(400);
 
@@ -105,7 +94,7 @@ void grab(int angle, double distance, double height) {
   a1 -= 10 * height;
   a4 += 10 * height;
 
-  setAngle(4, a4);
+  setAngle(4, 20);
   delay(100);
   setAngle(1, a1);
   setAngle(2, a2);
@@ -113,22 +102,46 @@ void grab(int angle, double distance, double height) {
 }
 
 void take() {
-  enablePomp();
   setAngle(0, 0);
-  setAngle(1, 45);
-  setAngle(2, 0);
+  setAngle(1, 80);
+  setAngle(3, 40);
+  delay(1000);
+  straight();
+  delay(500);
+  enablePomp();
+
+  grab(0, 0.25, 0.9);
 
   delay(1000);
   straight();
-
-  delay(4000);
-  grab(0, 0.25, 0.9);
-  
+  delay(1000);
+  setAngle(1, 60);
+  setAngle(2, -40);
+  setAngle(3, -85);
+  setAngle(4, -20);
   delay(2000);
-  straight();
+  setAngle(0, 13);
+  setAngle(1, 35);
+  setAngle(1, 0);
+  setAngle(3, -45);
+  delay(2000);
+  setAngle(1, -5);
+  setAngle(2, -20);
+  setAngle(4, -30);
 
-  delay(3000);
+  delay(1000);
+
   disablePomp();
+
+  setAngle(1, 5);
+
+  //  setAngle(1, 45);
+  //  setAngle(4, 10);
+  //  ostrich();
+  ////
+  //  setAngle(0, 0);
+  //  setAngle(1, 80);
+  //  setAngle(2, 45);
 }
 
 void take_test() {

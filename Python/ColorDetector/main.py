@@ -19,7 +19,7 @@ def press(event, x, y, a, b):  # функция выбора пикселя дл
 
 
 def calibrate_purple(pixel, name=PURPLE):  # функция настройи по заданному цвету на изображении
-    sensitivity: int = 30
+    sensitivity: int = 60
     upper = np.array([pixel[0] + sensitivity, pixel[1] + sensitivity, pixel[2] + 2 * sensitivity])
     lower = np.array([pixel[0] - sensitivity, pixel[1] - sensitivity, pixel[2] - 2 * sensitivity])
     lowers[name] = lower
@@ -41,6 +41,9 @@ def setup():  # первый цикл настройки, вызывается �
             calibrate_purple(pix)
             break
     initialize()
+    print("start")
+    input()
+    do("first", wait=True)
 
 
 def main():  # основной цикл
@@ -81,20 +84,22 @@ def main():  # основной цикл
             y_max = y
             goal = purple
     text = ""
-    goal_y = 471  # целевое значение по игреку (для манипулятора)
-    tolerance_x = 80  # чуствительность по иксу
-    tolerance_y = 30  # чуствительность по игреку
+    goal_y = 460  # целевое значение по игреку (для манипулятора)
+    tolerance_x = 60  # чуствительность по иксу
+    tolerance_y = 20  # чуствительность по игреку
     # if not start_grabbing:
 
     cmdA = ""
     cmdB = ""
 
-    if abs(goal[0] - ((w / 2)+105)) < tolerance_x:
+    shift_x = -10
+
+    if abs(goal[0] - ((w / 2)+shift_x)) < tolerance_x:
         text = "OK"
-    elif goal[0] < (w / 2)+85:
+    elif goal[0] < (w / 2)+shift_x:
         text = "Turn Right"
         cmdA = 'cr()'
-    elif goal[0] > (w / 2)+85:
+    elif goal[0] > (w / 2)+shift_x:
         text = "Turn Left"
         cmdA = 'cl()'
 

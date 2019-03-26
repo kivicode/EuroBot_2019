@@ -68,18 +68,21 @@ def wait_for(ser, symbol, max_time=-1):
             return -1
 
 
-def do(command, param=None):
+def do(command, param=None, wait=False):
     """Пыается выплнить и ждёт, пока не придёт ответ"""
     request = command  # генерация запроса, если передётся параметр
     ser = ser_wheels
     if not param is None:  # генерация запроса, если передётся параметр
         request = request % param  # передача парамтра в запрос
     send(ser, request + '\n')  # отправка запроса
-    # print(request + '\n')
-    if wait_for(ser, RECIEVED, 1) == -2:
-        print(f'Command was not recieved {request}')
-        return
-    if wait_for(ser, SUCCESS, 1) == -1:
-        print("Something happened while executing this command: %s" % request)
-    else:
-        print("Successfully complete: %s" % request)
+    print(request + '\n')
+
+    if wait:
+        if wait_for(ser, RECIEVED, 1) == -2:
+            print(f'Command was not recieved {request}')
+            return
+        if wait_for(ser, SUCCESS, 1) == -1:
+            print("Something happened while executing this command: %s" % request)
+        else:
+            print("Successfully complete: %s" % request)
+    time.sleep(0.4)
