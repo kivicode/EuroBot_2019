@@ -10,6 +10,8 @@ REFUSED = '|'  # символ ошибки выполнения
 WHEELS = 0
 MANIPULATOR = 1
 
+PORT = '/dev/tty.usbmodem14201'
+
 API = {'forward': 'f(%d)',  # Ехать вперёд на Х см
        'backward': 'b(%d)',  # Ехать назад на Х см
        'left': 'l(%d)',  # Повернуть влево на Х градусов
@@ -29,13 +31,9 @@ API = {'forward': 'f(%d)',  # Ехать вперёд на Х см
 
 def initialize():
     global ser_wheels
-    ser_wheels = serial.Serial('/dev/tty.usbmodem14201', 9600, timeout=1)
-    # ser_manipulator = serial.Serial('/dev/tty.wchusbserial1410', 9600, timeout=.1)
-    # serials[MANIPULATOR] = ser_manipulator
+    ser_wheels = serial.Serial(PORT, 9600, timeout=1)
     time.sleep(1)
     print('Can start')
-    # except Exception:
-    #     print("Arduino not found")
 
 
 def send(ser, cmd):
@@ -79,7 +77,7 @@ def do(command, param=None, wait=False):
 
     if wait:
         if wait_for(ser, RECIEVED, 1) == -2:
-            print(f'Command was not recieved {request}')
+            print('Command was not recieved {}'.format(request))
             return
         if wait_for(ser, SUCCESS, 1) == -1:
             print("Something happened while executing this command: %s" % request)

@@ -101,7 +101,7 @@ void grab(int angle, double distance, double height) {
   setAngle(3, a2);
 }
 
-void take() {
+void takeLU() {
   setAngle(0, 0);
   setAngle(1, 80);
   setAngle(3, 40);
@@ -109,9 +109,7 @@ void take() {
   straight();
   delay(500);
   enablePomp();
-
   grab(0, 0.25, 0.9);
-
   delay(1000);
   straight();
   delay(1000);
@@ -119,66 +117,63 @@ void take() {
   setAngle(2, -40);
   setAngle(3, -85);
   setAngle(4, -20);
-  delay(2000);
-  setAngle(0, 13);
+  delay(1000);
+  setAngle(0, 20);
   setAngle(1, 35);
   setAngle(1, 0);
   setAngle(3, -45);
-  delay(2000);
-  setAngle(1, -5);
-  setAngle(2, -20);
-  setAngle(4, -30);
-
   delay(1000);
-
+//  setAngle(1, -5);
+//  setAngle(2, -20);
+//  setAngle(4, -30);
   disablePomp();
-
-  setAngle(1, 5);
-
-  //  setAngle(1, 45);
-  //  setAngle(4, 10);
-  //  ostrich();
-  ////
-  //  setAngle(0, 0);
-  //  setAngle(1, 80);
-  //  setAngle(2, 45);
+  setAngle(0, -10);
+  delay(1000);
+  setup();
 }
 
-void take_test() {
-  //  straight();
-  //  delay(1000);
-  //  enablePomp();
+void takeRU() {
   setAngle(0, 0);
-  setAngle(1, 0);
+  setAngle(1, 80);
+  setAngle(3, 40);
   delay(1000);
   straight();
-  //  setAngle .(2, 45);
-
+  delay(500);
+  enablePomp();
+  grab(0, 0.25, 0.9);
   delay(1000);
-  //  grab(0, 0.2, 0.9);
-  //  delay(1000);
-  //  disablePomp();
   straight();
-
   delay(1000);
-
   setAngle(1, 60);
-  setAngle(2, -15);
-  setAngle(3, -60);
-
+  setAngle(2, -40);
+  setAngle(3, -85);
+  setAngle(4, -15);
   delay(1000);
-
-  setAngle(0, 20);
-  setAngle(3, -60);
+  setAngle(0, -15);
+  setAngle(1, 35);
   setAngle(1, 0);
-
+  setAngle(3, -45);
   delay(1000);
-  //  delay(3000);
-  //  putUp(L);
-  //  delay(100);
-  //  disablePomp();
-  //  delay(2600);
-  //  setAngle(0, -5, 10);
-  //  delay(500);
-  //  straight();
+//  setAngle(1, -5);
+//  setAngle(2, -10);
+//  setAngle(4, -30);
+  disablePomp();
+  setAngle(0, 10);
+  delay(1000);
+  setup();
 }
+
+int takeNumber = 0;
+void take() {
+  switch (takeNumber) {
+    case 0:
+      takeRU();
+      break;
+    case 1:
+      takeLU();
+      break;
+  }
+  //takeRU();
+  takeNumber++;
+}
+

@@ -1,6 +1,12 @@
 #include <Wire.h>
 #include "PCA9685.h"
 
+int PURPLE = 0;
+int YELLOW = 1;
+
+const int SIDE = PURPLE;
+
+
 int L = 0;
 int R = 1;
 
@@ -33,20 +39,10 @@ void setup() {
   Serial.begin(9600);
   Serial.println("StarT");
   disablePomp();
-  //  straight();
   setAngle(1, 45);
   setAngle(4, 10);
   ostrich();
 
-  //  delay(1000);
-  //
-  //  setAngle(0, 0);
-  //  setAngle(1, 80);
-  //  setAngle(3, 40);
-  //  delay(1000);
-  //  straight();
-
-  /*         */
   pinMode(pomp, OUTPUT);
   pinMode(LeftMotorForwardPin, OUTPUT);
   pinMode(LeftMotorBackwardPin, OUTPUT);
@@ -61,19 +57,9 @@ void setup() {
   pinMode(RightEncoderPin, INPUT_PULLUP);
 
   Serial.setTimeout(150);
-  //  take();
-
-//  forward(130);
-//  delay(1000);
-//  //  right(13);
-//  delay(1000);
-//  forward(25);
 }
 
 /*    Команды представленны в виде имя(параметр1, параметр2)    */
-/*
-   setAngle(1, 60) setAngle(2, -20) setAngle(3, -80)  setAngle(0, 15)  setAngle(1, 30) setAngle(1, 10)
-*/
 void loop() {
   while (Serial.available() > 0) {  // ждём команду
     String in = String(Serial.readStringUntil('\n'));  // считывание строки
@@ -82,7 +68,7 @@ void loop() {
       String params = split(split(in, '(', 1), ')', 0);  // массив с параметрами
       if (cmd == "cf") {  // калибровка: вперёд
         Serial.print(REC);  // подтверждение принятия
-        cf();
+        c_f();
         Serial.print(SUC);  // подтверждение выполнения
       }
       else if (cmd == "cb") {  // калибровка: назад
@@ -92,12 +78,12 @@ void loop() {
       }
       else if (cmd == "cl") {  // калибровка: влево
         Serial.print(REC);  // подтверждение принятия
-        left(1);
+        left(8);
         Serial.print(SUC);  // подтверждение выполнения
       }
       else if (cmd == "cr") {  // калибровка: вправо
         Serial.print(REC);  // подтверждение принятия
-        right(1);
+        right(8);
         Serial.print(SUC);  // подтверждение выполнения
       }
       else if (cmd == "f") {
@@ -139,9 +125,8 @@ void loop() {
       }
       else if (cmd == "first") {
         Serial.print(REC);  // подтверждение принятия
-        forward(130);
-        delay(1000);
-        forward(25);
+        forward(100);
+        right(10);
         Serial.print(SUC);  // подтверждение выполнения
       }
       else {
