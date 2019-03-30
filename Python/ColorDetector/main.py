@@ -28,7 +28,6 @@ def press(event, x, y, *kw):  # функция выбора пикселя дл�
 
 
 def calibrate(pixel, name):  # функция настройи по заданному цвету на изображении
-    print(name)
     sensitivity = 60
     upper = np.array([pixel[0] + sensitivity, pixel[1] + sensitivity, pixel[2] + 2 * sensitivity])
     lower = np.array([pixel[0] - sensitivity, pixel[1] - sensitivity, pixel[2] - 2 * sensitivity])

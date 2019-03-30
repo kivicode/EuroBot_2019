@@ -64,6 +64,7 @@ void loop() {
   while (Serial.available() > 0) {  // ждём команду
     String in = String(Serial.readStringUntil('\n'));  // считывание строки
     if (in != "") {
+      Serial.println(in);
       String cmd = split(in, '(', 0);  // находим имя команды
       String params = split(split(in, '(', 1), ')', 0);  // массив с параметрами
       if (cmd == "cf") {  // калибровка: вперёд
@@ -128,6 +129,94 @@ void loop() {
         forward(100);
         right(10);
         Serial.print(SUC);  // подтверждение выполнения
+      }
+      else if (cmd == "t") {
+        setAngle(0, 0);
+        setAngle(1, 80);
+        setAngle(3, 40);
+        delay(1000);
+        straight();
+        delay(500);
+        grab(0, 0.25, 0.9);
+        delay(1000);
+        straight();
+        delay(1000);
+        enablePomp();
+        setAngle(1, 60);
+        setAngle(2, -40);
+        setAngle(3, -85);
+        setAngle(4, -20);
+        delay(1000);
+        setAngle(0, 30);
+        setAngle(1, 35);
+        setAngle(2, -60);
+        setAngle(3, -60);
+        setAngle(4, -30);
+        delay(300);
+        setAngle(2, -75);
+        delay(300);
+        disablePomp();
+        setAngle(0, -10);
+        delay(1000);
+        setup();
+      } else if (cmd == "t") {
+        setAngle(0, 0);
+        setAngle(1, 80);
+        setAngle(3, 40);
+        delay(1000);
+        straight();
+        delay(500);
+        grab(0, 0.25, 0.9);
+        delay(1000);
+        straight();
+        delay(1000);
+        enablePomp();
+        setAngle(1, 60);
+        setAngle(2, -40);
+        setAngle(3, -85);
+        setAngle(4, -20);
+        delay(1000);
+        setAngle(0, 30);
+        setAngle(1, 35);
+        setAngle(2, -60);
+        setAngle(3, -60);
+        setAngle(4, -30);
+        delay(300);
+        setAngle(2, -75);
+        delay(300);
+        disablePomp();
+        setAngle(0, -10);
+        delay(1000);
+        setup();
+      } else if (cmd == "p") {
+        setAngle(0, 0);
+        setAngle(1, 80);
+        setAngle(3, 40);
+        delay(1000);
+        straight();
+        delay(500);
+        grab(0, 0.25, 0.9);
+        delay(1000);
+        straight();
+        delay(1000);
+        enablePomp();
+        setAngle(1, 60);
+        setAngle(2, -40);
+        setAngle(3, -85);
+        setAngle(4, -20);
+        delay(1000);
+        setAngle(0, -30);
+        setAngle(1, 35);
+        setAngle(2, -60);
+        setAngle(3, -60);
+        setAngle(4, -30);
+        delay(300);
+        setAngle(2, -75);
+        delay(300);
+        disablePomp();
+        setAngle(0, 10);
+        delay(1000);
+        setup();
       }
       else {
         Serial.print(in);

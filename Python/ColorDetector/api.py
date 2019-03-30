@@ -73,7 +73,7 @@ def do(command, param=None, wait=False):
     if not param is None:  # генерация запроса, если передётся параметр
         request = request % param  # передача парамтра в запрос
     send(ser, request + '\n')  # отправка запроса
-    print(request + '\n')
+    print(request)
 
     if wait:
         if wait_for(ser, RECIEVED, 1) == -2:

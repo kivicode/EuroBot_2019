@@ -3,6 +3,23 @@
 
 bool disabled[] = {false, false, false, false};
 
+void goToPucks() {
+  if (SIDE == PURPLE) {
+    forward(220);
+    diagRF(1500);
+    right(100);
+    forward(200);
+    rotateL(12);
+  } else {
+    forward(220);
+    diagLF(1500);
+    left(100);
+    forward(200);
+    rotateR(12);
+  }
+}
+
+
 void initPins() {
   for (int i = 0; i < 4; i++) {
     pinMode(stp[i], OUTPUT);
@@ -112,7 +129,7 @@ void rotateR(int deg) {
 
 void go(int ticks) {
   int lspd = spd * 2;
-  int period = 100;
+  int period = 400;
   for (int i = 0; i < ticks; i++) {
     if (i < period) {
       lspd--;
@@ -122,18 +139,12 @@ void go(int ticks) {
         digitalWrite(stp[i], HIGH);
       }
     }
-
     delayMicroseconds(lspd);
-
     for (int i = 0; i < 4; i++) {
       if (disabled[i] == false) {
         digitalWrite(stp[i], LOW);
       }
     }
-
     delayMicroseconds(lspd);
-    //    if (i > ticks - period) {
-    //      lspd++;
-    //    }
   }
 }

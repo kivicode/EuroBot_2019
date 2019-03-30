@@ -1,15 +1,12 @@
+#define YELLOW 1
+#define PURPLE -1
+
+#define SIDE YELLOW
+
 void setup() {
   Serial.begin(9600);
   initPins();
-  forward(220);
-//  delay(1000);
-  diagRF(1500);
-//  delay(1000);
-  right(100);
-//  delay(1000);
-  forward(200);
-  delay(1000);
-  rotateL(12);
+  goToPucks();
 }
 
 int p = 13;
