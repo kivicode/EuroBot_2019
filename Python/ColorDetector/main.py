@@ -1,17 +1,25 @@
 from utils import *  # импорт некоторых полезных функци
 from api import *
 import numpy as np
+from matplotlib.colors import to_rgba as rgb
 
 POINTS = []
 
-PURPLE = 0
+lowers = {}  # массив с нижними уровнями для 3 цветов
+uppers = {}  # массив с верхними уровнями для 3 цветов
 
-lowers = [[0] * 3] * 3  # массив с нижними уровнями для 3 цветов
-uppers = [[0] * 3] * 3  # массив с верхними уровнями для 3 цветов
+colors = [
+    'green',
+    'white',
+    'blue',
+    'red'
+]
 
-pucks = {'purple': []}  # массив с шайбами
+pucks = {colors[0]: [], colors[1]: [], colors[2]: [], colors[3]: []}  # массив с шайбами
 
 start_grabbing = False
+
+color_index = 0
 
 
 def press(event, x, y, *kw):  # функция выбора пикселя для настройки цвета
@@ -19,28 +27,34 @@ def press(event, x, y, *kw):  # функция выбора пикселя дл�
         POINTS.append([x, y])
 
 
-def calibrate_purple(pixel, name=PURPLE):  # функция настройи по заданному цвету на изображении
+def calibrate(pixel, name):  # функция настройи по заданному цвету на изображении
+    print(name)
     sensitivity = 60
     upper = np.array([pixel[0] + sensitivity, pixel[1] + sensitivity, pixel[2] + 2 * sensitivity])
     lower = np.array([pixel[0] - sensitivity, pixel[1] - sensitivity, pixel[2] - 2 * sensitivity])
     lowers[name] = lower
     uppers[name] = upper
-    print(lower, upper)
 
 
 def setup():  # первый цикл настройки, вызывается в начале программы
+    global POINTS
     cv2.namedWindow("Final")
     cv2.setMouseCallback('Final', press)
 
-    while True:
-        frame = getImage()
-        cv2.imshow('Final', frame)
-        if cv2.waitKey(1) & 0xFF == ord('p') or len(POINTS) == 1:  # вызов настроки цвета при выборе пикселя
-            blurred = cv2.GaussianBlur(frame, (11, 11), 0)  # блюр
-            hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)  # перевод в HSV
-            pix = hsv[POINTS[0][1], POINTS[0][0]]
-            calibrate_purple(pix)
-            break
+    for i in colors:
+        POINTS = []
+        while True:
+            frame = getImage()
+            print(rgb(i)[::-1][1:][::-1])
+            cv2.putText(frame, "Select %s color" % i, (10, 40), 2, 1, tuple([i * 255 for i in rgb(i)[::-1][1:]]))
+            cv2.imshow('Final', frame)
+            if cv2.waitKey(1) & 0xFF == ord('p') or len(POINTS) == 1:
+                blurred = cv2.GaussianBlur(frame, (11, 11), 0)  # блюр
+                hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)  # перевод в HSV
+                pix = hsv[POINTS[0][1], POINTS[0][0]]
+                calibrate(pix, i)
+                break
+
     initialize()
     print("start")
     # input("Enter something: ")
@@ -50,86 +64,86 @@ def setup():  # первый цикл настройки, вызывается �
 
 
 def main():  # основной цикл
-    global start_grabbing
+    global start_grabbing, color_index
     orig = getImage()
 
-    try:
-        blurred = cv2.GaussianBlur(orig, (11, 11), 0)  # блюр
-        hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)  # перевод в HSV
-        low = lowers[0]
-        up = uppers[0]
-        kernel = np.ones((10, 10), np.uint8)  # настройка ядра для морфологических преобразований
-        mask = cv2.inRange(hsv, low, up)  # создание маски для цвета
-        mask = cv2.erode(mask, kernel)  # эрозия
-        mask = cv2.dilate(mask, kernel)  # растяжение
-        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)  # фильтрация шумов
-        mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+    # try:
+    blurred = cv2.GaussianBlur(orig, (11, 11), 0)  # блюр
+    hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)  # перевод в HSV
+    low = lowers[colors[color_index]]
+    up = uppers[colors[color_index]]
+    kernel = np.ones((10, 10), np.uint8)  # настройка ядра для морфологических преобразований
+    mask = cv2.inRange(hsv, low, up)  # создание маски для цвета
+    mask = cv2.erode(mask, kernel)  # эрозия
+    mask = cv2.dilate(mask, kernel)  # растяжение
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)  # фильтрация шумов
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 
-        _, contours, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
-                                          cv2.CHAIN_APPROX_SIMPLE)  # поиск контуров шайб
-        pucks['purple'].clear()  # чистка массива фиолетовых шайб для нового кадра
-        h, w, c = orig.shape  # размеры картинки
-        cv2.line(orig, (int(w / 2), 0), (int(w / 2), h),
-                 (0, 255, 0))  # рисуем верт линию в центре экрана (для дебага)
-        for cnt in contours:
-            if cv2.contourArea(cnt) > 500:  # фильтрация по минимальной площади
-                M = cv2.moments(cnt)  # поиск моментов контура
-                cx = int(M['m10'] / M['m00'])  # вычисление центра по иксу
-                cy = int(M['m01'] / M['m00'])  # вычисление центра по игреку
-                pucks['purple'].append((cx, cy))  # добавляем центр шайбы в массив
-                cv2.circle(orig, (cx, cy), 10, (255, 255, 255), -1)  # рисуем центр
+    _, contours, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
+                                      cv2.CHAIN_APPROX_SIMPLE)  # поиск контуров шайб
+    pucks[colors[color_index]].clear()  # чистка массива фиолетовых шайб для нового кадра
+    h, w, c = orig.shape  # размеры картинки
+    cv2.line(orig, (int(w / 2), 0), (int(w / 2), h),
+             (0, 255, 0))  # рисуем верт линию в центре экрана (для дебага)
+    for cnt in contours:
+        if cv2.contourArea(cnt) > 500:  # фильтрация по минимальной площади
+            M = cv2.moments(cnt)  # поиск моментов контура
+            cx = int(M['m10'] / M['m00'])  # вычисление центра по иксу
+            cy = int(M['m01'] / M['m00'])  # вычисление центра по игреку
+            pucks[colors[color_index]].append((cx, cy))  # добавляем центр шайбы в массив
+            cv2.circle(orig, (cx, cy), 10, (255, 255, 255), -1)  # рисуем центр
 
-        y_max = 0
-        goal = pucks['purple'][0]
-        for purple in pucks['purple']:  # поиск контура с максимальнм игреком (ближайшая)
-            x, y = purple
-            if y > y_max:
-                y_max = y
-                goal = purple
-        text = ""
-        goal_y = 671  # целевое значение по игреку (для манипулятора)
-        tolerance_x = 60  # чуствительность по иксу
-        tolerance_y = 20  # чуствительность по игреку
-        # if not start_grabbing:
+    y_max = 0
+    goal = pucks[colors[color_index]][0]
+    for purple in pucks[colors[color_index]]:  # поиск контура с максимальнм игреком (ближайшая)
+        x, y = purple
+        if y > y_max:
+            y_max = y
+            goal = purple
+    text = ""
+    goal_y = 671  # целевое значение по игреку (для манипулятора)
+    tolerance_x = 60  # чуствительность по иксу
+    tolerance_y = 20  # чуствительность по игреку
 
-        cmdA = ""
-        cmdB = ""
+    cmdA = ""
+    cmdB = ""
 
-        shift_x = -10
+    shift_x = -10
 
-        if abs(goal[0] - ((w / 2) + shift_x)) < tolerance_x:
-            text = "OK"
-        elif goal[0] < (w / 2) + shift_x:
-            text = "Turn Right"
-            cmdA = 'cr()'
-        elif goal[0] > (w / 2) + shift_x:
-            text = "Turn Left"
-            cmdA = 'cl()'
+    if abs(goal[0] - ((w / 2) + shift_x)) < tolerance_x:
+        text = "OK"
+    elif goal[0] < (w / 2) + shift_x:
+        text = "Turn Right"
+        cmdA = 'cr()'
+    elif goal[0] > (w / 2) + shift_x:
+        text = "Turn Left"
+        cmdA = 'cl()'
 
-        if abs(goal[1] - goal_y) < tolerance_y:
-            text += "  OK"
-        elif goal[1] < goal_y:
-            text += "  Go Forward"
-            cmdB = 'cf()'
-        elif goal[1] > goal_y:
-            text += "  Go Backward"
-            cmdB = 'cb()'
+    if abs(goal[1] - goal_y) < tolerance_y:
+        text += "  OK"
+    elif goal[1] < goal_y:
+        text += "  Go Forward"
+        cmdB = 'cf()'
+    elif goal[1] > goal_y:
+        text += "  Go Backward"
+        cmdB = 'cb()'
 
-        do(cmdA)
-        do(cmdB)
+    do(cmdA)
+    do(cmdB)
 
-        if text == 'OK  OK':
-            do("get", wait=True)
-            print("Grabbed a new punk")
-            time.sleep(2)
+    if text == 'OK  OK':
+        do("get", wait=True)
+        print("Grabbed a new punk")
+        time.sleep(2)
+        color_index += 1
 
-        cv2.circle(orig, goal, 10, (0, 0, 255), -1)  # отмечаем целевую шайбу красным цветом
-        cv2.putText(orig, text, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0),
-                    3)  # рисуем указания по движению робота
+    cv2.circle(orig, goal, 10, (0, 0, 255), -1)  # отмечаем целевую шайбу красным цветом
+    cv2.putText(orig, text, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0),
+                3)  # рисуем указания по движению робота
 
-    except Exception as exception:
-        print("Color detection runtime error: %s" % exception)
-        pass
+    # except Exception as exception:
+    #     print("Color detection runtime error: %s" % exception)
+    #     pass
 
     cv2.imshow('Final', orig)
 

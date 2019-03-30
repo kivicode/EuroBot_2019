@@ -10,7 +10,7 @@ REFUSED = '|'  # символ ошибки выполнения
 WHEELS = 0
 MANIPULATOR = 1
 
-PORT = '/dev/tty.usbmodem14201'
+PORT = '/dev/tty.wchusbserial1410'
 
 API = {'forward': 'f(%d)',  # Ехать вперёд на Х см
        'backward': 'b(%d)',  # Ехать назад на Х см

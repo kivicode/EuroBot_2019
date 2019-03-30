@@ -1,7 +1,7 @@
 import cv2
 import imutils
 
-camA = cv2.VideoCapture(1)
+camA = cv2.VideoCapture(0)
 
 
 def getImage():
