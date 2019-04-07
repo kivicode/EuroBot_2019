@@ -101,79 +101,123 @@ void grab(int angle, double distance, double height) {
   setAngle(3, a2);
 }
 
-void takeLU() {
+void grab() {
   setAngle(0, 0);
   setAngle(1, 80);
   setAngle(3, 40);
   delay(1000);
   straight();
-  delay(500);
   enablePomp();
   grab(0, 0.25, 0.9);
   delay(1000);
   straight();
   delay(1000);
+}
+
+void midPos() {
   setAngle(1, 60);
   setAngle(2, -40);
   setAngle(3, -85);
-  setAngle(4, -20);
-  delay(1000);
-  setAngle(0, 20);
+  setAngle(4, -10);
+}
+
+void takeUp() {
   setAngle(1, 35);
   setAngle(1, 0);
   setAngle(3, -45);
-  delay(1000);
-//  setAngle(1, -5);
-//  setAngle(2, -20);
-//  setAngle(4, -30);
+}
+
+void takeDown() {
+  setAngle(1, 35);
+  setAngle(2, -80);
+  setAngle(3, -60);
+  setAngle(4, -20);
+}
+
+void kickRight() {
   disablePomp();
-  setAngle(0, -10);
+  setAngle(0, 20);
   delay(1000);
-  setup();
+}
+
+void kickLeft() {
+  disablePomp();
+  delay(300);
+  setAngle(0, -20);
+  delay(1000);
+}
+
+void zero() {
+  disablePomp();
+  setAngle(1, 45);
+  setAngle(4, 10);
+  ostrich();
+}
+
+
+
+void takeLU() {
+  grab();
+  midPos();
+  delay(1000);
+  setAngle(0, 20);
+  takeUp();
+  delay(1000);
+  kickLeft();
+  zero();
 }
 
 void takeRU() {
-  setAngle(0, 0);
-  setAngle(1, 80);
-  setAngle(3, 40);
+  grab();
+  midPos();
   delay(1000);
-  straight();
-  delay(500);
+  setAngle(0, -25);
+  takeUp();
+  delay(1000);
+  kickRight();
+  zero();
+}
+
+void takeLD() {
+  grab();
+  midPos();
+  delay(1000);
+  setAngle(0, 23);
+  takeDown();
+  delay(300);
+  kickLeft();
+  zero();
+}
+
+void takeRD() {
   enablePomp();
-  grab(0, 0.25, 0.9);
+  grab();
+  midPos();
   delay(1000);
-  straight();
-  delay(1000);
-  setAngle(1, 60);
-  setAngle(2, -40);
-  setAngle(3, -85);
-  setAngle(4, -15);
-  delay(1000);
-  setAngle(0, -15);
-  setAngle(1, 35);
-  setAngle(1, 0);
-  setAngle(3, -45);
-  delay(1000);
-//  setAngle(1, -5);
-//  setAngle(2, -10);
-//  setAngle(4, -30);
-  disablePomp();
-  setAngle(0, 10);
-  delay(1000);
-  setup();
+  setAngle(0, -35);
+  takeDown();
+  delay(300);
+  delay(300);
+  kickRight();
+  zero();
 }
 
 int takeNumber = 0;
 void take() {
   switch (takeNumber) {
-    case 0:
+    case 3:
       takeRU();
       break;
     case 1:
       takeLU();
       break;
+    case 2:
+      takeLD();
+      break;
+    case 0:
+      takeRD();
+      break;
   }
-  //takeRU();
   takeNumber++;
 }
 

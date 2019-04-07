@@ -1,14 +1,17 @@
 #include <Wire.h>
 #include "PCA9685.h"
 
-int PURPLE = 0;
-int YELLOW = 1;
+const int PURPLE = 0;
+const int YELLOW = 1;
 
-const int SIDE = PURPLE;
+int SIDE = PURPLE;
 
 
 int L = 0;
 int R = 1;
+
+int starter = 47;
+int switcher = 45;
 
 PCA9685 driver;
 PCA9685_ServoEvaluator pwmServo(102, 470);
@@ -37,7 +40,6 @@ void setup() {
   driver.init(B000000);
   driver.setPWMFrequency(50);
   Serial.begin(9600);
-  Serial.println("StarT");
   disablePomp();
   setAngle(1, 45);
   setAngle(4, 10);
@@ -56,7 +58,20 @@ void setup() {
   pinMode(LeftEncoderPin, INPUT_PULLUP);
   pinMode(RightEncoderPin, INPUT_PULLUP);
 
+  pinMode(switcher,  INPUT_PULLUP);
+  pinMode(starter,  INPUT_PULLUP);
   Serial.setTimeout(150);
+
+  while (digitalRead(starter) != 0) {}
+
+  if (digitalRead(switcher) == 1) {
+    SIDE = PURPLE;
+    Serial.println("PURPLE");
+  } else {
+    SIDE = YELLOW;
+    Serial.println("YELLOW");
+  }
+//  test();
 }
 
 /*    Команды представленны в виде имя(параметр1, параметр2)    */
@@ -131,34 +146,7 @@ void loop() {
         Serial.print(SUC);  // подтверждение выполнения
       }
       else if (cmd == "t") {
-        setAngle(0, 0);
-        setAngle(1, 80);
-        setAngle(3, 40);
-        delay(1000);
-        straight();
-        delay(500);
-        grab(0, 0.25, 0.9);
-        delay(1000);
-        straight();
-        delay(1000);
-        enablePomp();
-        setAngle(1, 60);
-        setAngle(2, -40);
-        setAngle(3, -85);
-        setAngle(4, -20);
-        delay(1000);
-        setAngle(0, 30);
-        setAngle(1, 35);
-        setAngle(2, -60);
-        setAngle(3, -60);
-        setAngle(4, -30);
-        delay(300);
-        setAngle(2, -75);
-        delay(300);
-        disablePomp();
-        setAngle(0, -10);
-        delay(1000);
-        setup();
+
       } else if (cmd == "t") {
         setAngle(0, 0);
         setAngle(1, 80);

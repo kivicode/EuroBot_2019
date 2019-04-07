@@ -5,17 +5,13 @@ bool disabled[] = {false, false, false, false};
 
 void goToPucks() {
   if (SIDE == PURPLE) {
-    forward(220);
-    diagRF(1500);
-    right(100);
-    forward(200);
-    rotateL(12);
+    
   } else {
-    forward(220);
-    diagLF(1500);
-    left(100);
-    forward(200);
-    rotateR(12);
+    //    forward(220);
+    //    diagLF(1500);
+    //    left(100);
+    //    forward(200);
+    //    rotateR(12);
   }
 }
 
@@ -61,7 +57,7 @@ void right(int mm) {
   setDir(2, F);
   setDir(3, B);
   setDir(4, F);
-  go(2.04 * mm);
+  go(0.8 * 2.04 * mm);
 }
 
 void left(int mm) {
@@ -70,7 +66,7 @@ void left(int mm) {
   setDir(2, B);
   setDir(3, F);
   setDir(4, B);
-  go(2.04 * mm);
+  go(0.8 * 2.04 * mm);
 }
 
 void diagLB(int mm) {
@@ -79,7 +75,7 @@ void diagLB(int mm) {
   disabled[2] = true;
   setDir(2, B);
   setDir(4, B);
-  go(mm);
+  go(1.8 * mm);
 }
 
 void diagRF(int mm) {
@@ -88,7 +84,7 @@ void diagRF(int mm) {
   disabled[2] = true;
   setDir(2, F);
   setDir(4, F);
-  go(mm);
+  go(mm * 1.8);
 }
 
 void diagLF(int mm) {
@@ -97,7 +93,7 @@ void diagLF(int mm) {
   disabled[3] = true;
   setDir(1, F);
   setDir(3, F);
-  go(mm);
+  go(1.8 * mm);
 }
 
 void diagRB(int mm) {
@@ -106,7 +102,7 @@ void diagRB(int mm) {
   disabled[3] = true;
   setDir(1, B);
   setDir(3, B);
-  go(mm);
+  go(1.8 * mm);
 }
 
 void rotateL(int deg) {

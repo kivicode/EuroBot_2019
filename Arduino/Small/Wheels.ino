@@ -3,18 +3,16 @@ float WheelRadius = 4;
 float WheelLength = WheelRadius * PI * 2;
 
 int total_ticks = 0;
-void forward(int dist) {
-  int times = dist / 2;
-  total_ticks = 0;
-  for (int i = 0; i < times; i++) {
-    cf(true);
-  }
-}
+//void forward(int dist) {
+//  int times = dist / 2;
+//  total_ticks = 0;
+//  for (int i = 0; i < times; i++) {
+//    cf(true);
+//  }
+//}
 
 void cf(bool smooth) {
   long int ticks = cm2tick(2);
-  //  analogWrite(LeftMotorSpeedPin, SIDE == PURPLE ? 90 : 60);
-  //  analogWrite(RightMotorSpeedPin, SIDE == PURPLE ? 60 : 100);
 
   digitalWrite(LeftMotorForwardPin, HIGH);
   digitalWrite(RightMotorForwardPin, HIGH);
@@ -34,6 +32,35 @@ void c_f() {
   for (int i = 0; i < times; i++) {
     cf(false);
   }
+}
+
+void forward(int mm) {
+  analogWrite(LeftMotorSpeedPin, 105);
+  analogWrite(RightMotorSpeedPin, 60);
+
+  digitalWrite(LeftMotorForwardPin, HIGH);
+  digitalWrite(RightMotorForwardPin, HIGH);
+
+  int lastState = 0;
+  int counter = 0;
+  int ticks = (500.0 / 190.0) * mm;
+  while (counter <= ticks) {
+    int cur = digitalRead(RightEncoderPin);
+    if (cur != lastState) {
+      lastState = cur;
+      counter++;
+    }
+  }
+
+  digitalWrite(LeftMotorForwardPin, LOW);
+  digitalWrite(RightMotorForwardPin, LOW);
+
+  digitalWrite(LeftMotorBackwardPin, HIGH);
+  digitalWrite(RightMotorBackwardPin, HIGH);
+  delay(50);
+  digitalWrite(LeftMotorBackwardPin, LOW);
+  digitalWrite(RightMotorBackwardPin, LOW);
+  left(5);
 }
 
 void backward(int dist) {

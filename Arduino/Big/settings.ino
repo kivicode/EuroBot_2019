@@ -1,6 +1,6 @@
 #define debug(...) Serial.println(__VA_ARGS__)
 
-#define spd 300
+#define spd 500
 
 #define R 30.0
 #define Len 2*3.13*R
