@@ -1,4 +1,4 @@
-#!/Users/vovinkomp/PycharmProjects/ColorDetector/venv/bin/python
+#!/Users/vovinkomp/PycharmProjects/Navigation/venv/bin/python
 # EASY-INSTALL-ENTRY-SCRIPT: 'setuptools==39.1.0','console_scripts','easy_install'
 __requires__ = 'setuptools==39.1.0'
 import re
