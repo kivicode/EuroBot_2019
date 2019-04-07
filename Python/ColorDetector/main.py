@@ -62,11 +62,7 @@ def setup():  # первый цикл настройки, вызывается �
     time.sleep(.5)
 
 
-def main():  # основной цикл
-    global start_grabbing, color_index
-    orig = getImage()
-
-    # try:
+def get_cur_puck(orig):
     blurred = cv2.GaussianBlur(orig, (11, 11), 0)  # блюр
     hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)  # перевод в HSV
     low = lowers[colors[color_index]]
@@ -80,7 +76,7 @@ def main():  # основной цикл
 
     _, contours, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
                                       cv2.CHAIN_APPROX_SIMPLE)  # поиск контуров шайб
-    pucks[colors[color_index]].clear()  # чистка массива фиолетовых шайб для нового кадра
+    pucks[colors[color_index]].clear()  # чистка массива  шайб для нового кадра
     h, w, c = orig.shape  # размеры картинки
     cv2.line(orig, (int(w / 2), 0), (int(w / 2), h),
              (0, 255, 0))  # рисуем верт линию в центре экрана (для дебага)
@@ -91,6 +87,15 @@ def main():  # основной цикл
             cy = int(M['m01'] / M['m00'])  # вычисление центра по игреку
             pucks[colors[color_index]].append((cx, cy))  # добавляем центр шайбы в массив
             cv2.circle(orig, (cx, cy), 10, (255, 255, 255), -1)  # рисуем центр
+    print(pucks)
+
+
+def main():  # основной цикл
+    global start_grabbing, color_index
+    orig = getImage()
+
+    get_cur_puck(orig)
+    h, w, c = orig.shape  # размеры картинки
 
     y_max = 0
     goal = pucks[colors[color_index]][0]
