@@ -1,30 +1,75 @@
-int angles[5] = {0, 0, 0, 0, 0};
-
 void setAngle(int servo_id, int angle) {
   driver.setChannelPWM(servo_id, pwmServo.pwmForAngle(angle));
 }
 
-void levelUp() {
-  setAngle(0, -57);
-  setAngle(2, 64);
-  setAngle(5, 90);
+void levelDown() {
+  setAngle(A_level, -30);
+  setAngle(B_level, -50);
+  setAngle(C_level, 50);
 }
 
-void levelDown() {
-  setAngle(0, 67);
-  setAngle(2, -65);
-  setAngle(5, -40);
+void levelUp() {
+  setAngle(A_level, 67);
+  setAngle(B_level, 65);
+  setAngle(C_level, -40);
 }
 
 
 void pompsMid() {
-  setAngle(7, 55);
-  setAngle(3, 3);
-  setAngle(4, -40);
+  setAngle(A_pomp, -42);
+  setAngle(B_pomp, 0);
+  setAngle(C_pomp, 55);
 }
 
 void pompsDown() {
-  setAngle(7, -50);
-  setAngle(3, 90);
-  setAngle(4, 50);
+  setAngle(A_pomp, 40);
+  setAngle(B_pomp, 90);
+  setAngle(C_pomp, -30);
 }
+
+void enablePomp() {
+  digitalWrite(pomp, LOW);
+}
+
+void disablePomp() {
+  digitalWrite(pomp, HIGH);
+}
+
+void grabA() {
+  setAngle(A_pomp, -42);
+  digitalWrite(A_grab, LOW);
+  digitalWrite(A_kick, HIGH);
+}
+
+void grabB() {
+  setAngle(B_pomp, 0);
+  digitalWrite(B_grab, LOW);
+  digitalWrite(B_kick, HIGH);
+}
+
+void grabC() {
+  setAngle(C_pomp, 55);
+  digitalWrite(C_grab, LOW);
+  digitalWrite(C_kick, HIGH);
+}
+
+
+
+void kickA() {
+  setAngle(A_pomp, 30);
+  digitalWrite(A_grab, HIGH);
+  digitalWrite(A_kick, LOW);
+}
+
+void kickB() {
+  setAngle(B_pomp, 90);
+  digitalWrite(B_grab, HIGH);
+  digitalWrite(B_kick, LOW);
+}
+
+void kickC() {
+  setAngle(C_pomp, -40);
+  digitalWrite(C_grab, HIGH);
+  digitalWrite(C_kick, LOW);
+}
+
