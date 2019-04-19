@@ -62,117 +62,131 @@ void setup() {
   m.set_steps_per_turn(200); //шагов на оборот шаговика
   m.set_steps_mod(0.785);
   m.set_speed(1);
-  /*
-    //-------------------- Езда до первых 6 шайб --------------------
-    mov(600, 0);
-    mov(100, 270);
-    mov(500, 90);
-    mov(100, 0);
-    mov(230, 90);
-    mov(100, 0);
-    mov(150, 180);
+
+  //-------------------- Езда до первых 6 шайб --------------------
+  mov(600, 0);
+  mov(100, 270);
+  mov(500, 90);
+  mov(100, 0);
+  mov(230, 90);
+  mov(100, 0);
+  mov(150, 180);
 
 
-    pompsMid();
-    enablePomp();
-    grabA();
-    grabB();
-    kickC();
-    mov(200, 0);
-    delay(500);
-    mov(200, 180);
-    pompsDown();
-    delay(700);
-    kickA();
-    kickB();
-    disablePomp();
-    left(5);
+  pompsMid();
+  enablePomp();
+  grabA();
+  grabB();
+  kickC();
+  mov(200, 0);
+  delay(500);
+  mov(200, 180);
+  pompsDown();
+  delay(700);
+  kickA();
+  kickB();
+  disablePomp();
+  left(5);
 
 
-    mov(250, 0);
-    mov(200, 270);
-    mov(100, 0);
-    mov(200, 180);
-    left(2);
+  mov(250, 0);
+  mov(200, 270);
+  mov(120, 0);
+  mov(200, 180);
+  left(2);
 
-    pompsMid();
-    enablePomp();
-    grabA();
-    grabB();
-    kickC();
-    mov(250, 0);
-    delay(500);
-    mov(220, 180);
-    pompsDown();
-    delay(700);
-    kickA();
-    kickB();
-    disablePomp();
-    left(5);
+  pompsMid();
+  enablePomp();
+  grabA();
+  grabB();
+  kickC();
+  mov(250, 0);
+  delay(500);
+  mov(220, 180);
+  pompsDown();
+  delay(700);
+  kickA();
+  kickB();
+  disablePomp();
+  left(5);
 
-    mov(300, 0);
-    mov(102, 270);
-    mov(90, 0);
-    mov(100, 180);
-    pompsMid();
-    enablePomp();
-    kickA();
-    kickB();
-    grabC();
-    delay(700);
-    mov(200, 0);
-    delay(500);
-    mov(150, 180);
-    pompsDown();
-    delay(700);
-    kickC();
+  mov(300, 0);
+  mov(102, 270);
+  mov(90, 0);
+  mov(100, 180);
+  pompsMid();
+  enablePomp();
+  kickA();
+  kickB();
+  grabC();
+  delay(700);
+  mov(200, 0);
+  delay(500);
+  mov(150, 180);
+  pompsDown();
+  delay(700);
+  kickC();
 
-    mov(113, 90);
-    grabC();
-    delay(200);
-    mov(200, 0);
-    delay(200);
-    mov(200, 180);
-    pompsDown();
-    delay(300);
-    kickC();
-    disablePomp();
-    levelUp();
+  mov(113, 90);
+  grabC();
+  delay(200);
+  mov(200, 0);
+  delay(200);
+  mov(200, 180);
+  pompsDown();
+  delay(300);
+  kickC();
+  disablePomp();
+  levelUp();
 
-    // -------------------- Езда до шайб у горки --------------------
-    mov(800, 270);
-    mov(920, 0);
-    mov(250, 270);
-    mov(100, 180);
-    mov(100, 90);
-    left(6);
-    enablePomp();
-    grabB();
-    grabC();
-    kickA();
-    levelDown();
-    delay(300);
-    mov(350, 0);
-    delay(300);
-    mov(150, 180);
-    levelUp();
-    pompsDown();
-    delay(300);
-    kickB();
-    kickC();
-    disablePomp();
-  */
+  // -------------------- Езда до шайб у горки --------------------
+  kickA();
+  kickB();
+  kickC();
+  delay(300);
+  levelDown();
+  setAngle(A_level, -50);
+  setAngle(B_level, -70);
+  setAngle(C_level, 70);
+  mov(400, 270);
+  right(15);
+  mov(400, 270);
+  mov(920, 0);
+  mov(250, 270);
+  levelUp();
+  delay(400);
+  pompsMid();
+  mov(100, 180);
+  levelDown();
+  mov(100, 90);
+  left(6);
+  enablePomp();
+  grabB();
+  grabC();
+  kickA();
+  levelDown();
+  delay(300);
+  mov(350, 0);
+  delay(300);
+  mov(150, 180);
+  levelUp();
+  pompsDown();
+  delay(300);
+  kickB();
+  kickC();
+  disablePomp();
+
 
   //-------------------- Езда до ускорителя у горки --------------------
-  mov(100, 0);
+  mov(300, 0);
   mov(550, 180);
   mov(990, 90);
   mov(350, 0);
   mov(250, 90);
   mov(100, 0);
   mov(150, 180);
-  mov(25, 270);
-
+  mov(45, 270);
+  left(5);
   levelUp();
   enablePomp();
   delay(300);
@@ -186,6 +200,10 @@ void setup() {
   levelUp();
   pompsMid();
   setAngle(C_pomp, -40);
+  setAngle(A_level, 65);
+  setAngle(B_level, 45);
+  setAngle(A_pomp, -20);
+  setAngle(B_pomp, 20);
   delay(500);
   mov(200, 0);
   disablePomp();
@@ -196,7 +214,6 @@ void setup() {
   delay(1000);
   mov(100, 180);
   mov(30, 270);
-
   levelDown();
   pompsDown();
   delay(300);
@@ -207,8 +224,8 @@ void setup() {
   delay(700);
   digitalWrite(A_grab, LOW);
   digitalWrite(A_kick, HIGH);
-  setAngle(A_level, 67);
-  setAngle(A_pomp, -42);
+  setAngle(A_level, 65);
+  setAngle(A_pomp, -20);
   delay(900);
   mov(100, 0);
   disablePomp();
@@ -217,7 +234,10 @@ void setup() {
   delay(1000);
   mov(100, 180);
 
-
+  //    setAngle(A_level, 65);
+  //    setAngle(B_level, 45);
+  //    setAngle(A_pomp, -20);
+  //    setAngle(C_pomp, -40);
 
   //  levelDown();
 
