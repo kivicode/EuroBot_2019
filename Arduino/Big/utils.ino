@@ -101,6 +101,6 @@ void go(int goal) {
         digitalWrite(stp[i], t % 2 == 0 ? HIGH : LOW);
       }
     }
-    delayMicroseconds(800);
+    delayMicroseconds(del);
   }
 }

@@ -19,14 +19,14 @@ PCA9685_ServoEvaluator pwmServo(102, 470);
 int angles[5] = {0, 0, 0, 0, 0};
 int pomp = 46;
 
-#define LeftMotorBackwardPin 4
-#define LeftMotorForwardPin 3
-#define LeftMotorSpeedPin 2
+#define LeftMotorBackwardPin 50
+#define LeftMotorForwardPin 48
+#define LeftMotorSpeedPin 51
 #define LeftEncoderPin 5
 
-#define RightMotorBackwardPin 9
-#define RightMotorForwardPin 8
-#define RightMotorSpeedPin 7
+#define RightMotorBackwardPin 52
+#define RightMotorForwardPin 49
+#define RightMotorSpeedPin 53
 #define RightEncoderPin 6
 
 String SUC = "~";  // символ успешного выполнения команды (см. api.py)
@@ -79,10 +79,22 @@ void setup() {
 
 /*    Команды представленны в виде имя(параметр1, параметр2)    */
 void loop() {
-//  if (Serial1.available() > 0) {
-    int data = Serial1.read();
-    Serial.println(data);
-//  }
+  digitalWrite(LeftMotorBackwardPin, HIGH);
+  digitalWrite(RightMotorBackwardPin, HIGH);
+  digitalWrite(LeftMotorForwardPin, LOW);
+  digitalWrite(RightMotorForwardPin, LOW);
+  analogWrite(LeftMotorSpeedPin, 250);
+  analogWrite(RightMotorSpeedPin, 250);
+  delay(5000);
+  digitalWrite(LeftMotorForwardPin, LOW);
+  digitalWrite(RightMotorForwardPin, LOW);
+  digitalWrite(LeftMotorBackwardPin, LOW);
+  digitalWrite(RightMotorBackwardPin, LOW);
+  delay(100000);
+  //  if (Serial1.available() > 0) {
+  int data = Serial1.read();
+  Serial.println(data);
+  //  }
   //  while (Serial.available() > 0) {  // ждём команду
   //    String in = String(Serial.readStringUntil('\n'));  // считывание строки
   //    if (in != "") {

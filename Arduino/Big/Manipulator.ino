@@ -1,5 +1,5 @@
 void setAngle(int servo_id, int angle) {
-  driver.setChannelPWM(servo_id, pwmServo.pwmForAngle(angle));
+  driver.setChannelPWM(servo_id, pwmServo.pwmForAngle(servo_id != C_level ? angle : angle - 20));
 }
 
 void levelDown() {
