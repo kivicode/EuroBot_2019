@@ -180,8 +180,8 @@ void setup() {
 
 
     //-------------------- Езда до ускорителя у горки --------------------
-    mov(300, 0);
-    mov(550, 180);
+    mov(100, 0);
+    mov(600, 180);
     mov(990, 90);
     mov(350, 0);
     mov(250, 90);
@@ -235,22 +235,22 @@ void setup() {
     digitalWrite(A_kick, LOW);
     delay(1000);
     mov(100, 180);
+
+
+    //-------------------- Езда от весов к ускорителю --------------------
+    mov(400, 180);
+    right(90);
+    mov(700, 0);
+    right(93);
+    mov(750, 0);
+    mov(200, 0);
+    del = 1700;
+    mov(30, 270);
+    mov(90, 270);
+    mov(50, 0);
+
+
   */
-
-  //-------------------- Езда от весов к ускорителю --------------------
-  //  mov(400, 180);
-  //  right(90);
-  //  mov(700, 0);
-  //  right(93);
-  //  mov(750, 0);
-  //  mov(200, 0);
-  //  del = 1700;
-  //  mov(30, 270);
-  //  mov(90, 270);
-  //  mov(50, 0);
-
-
-
   //-------------------- Выгрузка шайб на ускоритель --------------------
   kickTwo();
   del = 800;
@@ -271,7 +271,6 @@ void setup() {
   delay(500);
   mov(170, 0);
   mov(24, 180);
-
   delay(500);
   disablePomp();
   levelDown();
@@ -280,52 +279,17 @@ void setup() {
   delay(500);
   mov(100, 180);
 
-}
-
-int k = 0;
-void kickTwo() {
-  del = 1600;
-  if (k == 0) {
-    levelDown();
-  } else {
-    setAngle(C_level, 90);
-    setAngle(B_level, -90);
-  }
-  mov(100, 0);
-  mov(k == 0 ? 75 : 103, 180);
-  if (k == 1) {
-    right(1);
-  }
-  if (k == 0) {
-    mov(30, 90);
-  } else {
-    mov(50, 270);
-  }
-  digitalWrite(B_grab, LOW);
-  digitalWrite(B_kick, HIGH);
-  digitalWrite(C_grab, LOW);
-  digitalWrite(C_kick, HIGH);
-  enablePomp();
+  //-------------------- Захват голдениума --------------------
   setAngle(B_level, 90);
-  setAngle(C_level, -40);
   grabB();
-  setAngle(B_pomp, 0);
-  grabC();
-  setAngle(C_pomp, 65);
-  delay(500);
-  mov(100, 0);
-  mov(24, 180);
-  delay(500);
-  disablePomp();
-  levelDown();
-  delay(500);
-  kickC();
-  kickB();
-  levelUp();
-  delay(500);
-  mov(100, 180);
-  k++;
+  enablePomp();
+  mov(290, 270);
+  mov(150, 0);
+  mov(200, 180);
+
+
 }
+
 
 void loop() {
 }

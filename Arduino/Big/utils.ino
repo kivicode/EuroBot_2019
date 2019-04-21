@@ -104,3 +104,48 @@ void go(int goal) {
     delayMicroseconds(del);
   }
 }
+
+int k = 0;
+void kickTwo() {
+  del = 1600;
+  if (k == 0) {
+    levelDown();
+  } else {
+    setAngle(C_level, 90);
+    setAngle(B_level, -90);
+  }
+  mov(100, 0);
+  mov(k == 0 ? 75 : 103, 180);
+  if (k == 1) {
+    right(3);
+  }
+  if (k == 0) {
+    mov(30, 90);
+  } else {
+    mov(50, 270);
+  }
+  digitalWrite(B_grab, LOW);
+  digitalWrite(B_kick, HIGH);
+  digitalWrite(C_grab, LOW);
+  digitalWrite(C_kick, HIGH);
+  enablePomp();
+  setAngle(B_level, 90);
+  setAngle(C_level, -40);
+  grabB();
+  setAngle(B_pomp, 0);
+  grabC();
+  setAngle(C_pomp, 65);
+  delay(500);
+  mov(100, 0);
+  mov(24, 180);
+  delay(500);
+  disablePomp();
+  levelDown();
+  delay(500);
+  kickC();
+  kickB();
+  levelUp();
+  delay(500);
+  mov(100, 180);
+  k++;
+}
