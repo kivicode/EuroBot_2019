@@ -1,3 +1,9 @@
+#include <Wire.h>
+#include "PCA9685.h"
+
+PCA9685 driver;
+PCA9685_ServoEvaluator pwmServo(102, 470);
+
 void setAngle(int servo_id, int angle) {
   driver.setChannelPWM(servo_id, pwmServo.pwmForAngle(servo_id != C_level ? angle : angle - 20));
 }
@@ -72,4 +78,3 @@ void kickC() {
   digitalWrite(C_grab, HIGH);
   digitalWrite(C_kick, LOW);
 }
-

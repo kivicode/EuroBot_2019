@@ -1,8 +1,21 @@
+#define F HIGH
+#define B LOW
+#define YELLOW 1
+#define PURPLE 0
+
 bool disabled[] = {false, false, false, false};
 
 int speeds[] = {0, 0, 0, 0};
 int t = 0;
 
+int enemyPin = 2;
+bool canGo = true;
+
+int SwitcherPin = 3;
+int StarterPin = 4;
+
+
+Movement m;
 
 void initPins() {
   for (int i = 0; i < 4; i++) {
@@ -14,6 +27,37 @@ void initPins() {
     pinMode(i, OUTPUT);
     digitalWrite(i, HIGH);
   }
+  pinMode(enemyPin, INPUT);
+  pinMode(SwitcherPin, INPUT_PULLUP);
+  pinMode(StarterPin, INPUT);
+  attachInterrupt(digitalPinToInterrupt(enemyPin), ENEMY, HIGH);
+}
+
+void initServos() {
+  Wire.begin();
+  Wire.setClock(400000);
+  driver.resetDevices();
+  driver.init(B000000);
+  driver.setPWMFrequency(50);
+}
+
+void initMovement() {
+  m.set_wheel_rad(60); //радиус колеса
+  m.set_steps_per_turn(200); //шагов на оборот шаговика
+  m.set_steps_mod(0.785);
+  m.set_speed(1);
+}
+
+void waitForStart() {
+  if (useStarter) {
+    while (digitalRead(StarterPin) != 0);
+  }
+}
+
+void setSide() {
+  if (useSwitcher) {
+    SIDE = digitalRead(SwitcherPin);
+  }
 }
 
 void resetDisabled() {
@@ -22,16 +66,10 @@ void resetDisabled() {
   }
 }
 
-
-void check() {
-  if (Serial3.read() > 0) {
-    Serial.println("Stop");
-    delay(1000);
-    check();
-  } else {
-    Serial.println("Start");
-  }
+void setDir(int m, int d) {
+  digitalWrite(dir[m - 1], m > 2 ? 1 - d : d);
 }
+
 
 void right(int mm) {
   resetDisabled();
@@ -94,14 +132,27 @@ void mov(float dist, double angle) {
   go(goal);
 }
 
+void ENEMY() {
+  int state = digitalRead(enemyPin);
+  if (state == 1) {
+    canGo = false;
+  } else {
+    canGo = true;
+  }
+}
+
 void go(int goal) {
   for (int t = 0; t < goal; t++) {
-    for (int i = 0; i < 4; i++) {
-      if (speeds[i] != 0) {
-        digitalWrite(stp[i], t % 2 == 0 ? HIGH : LOW);
+    if (canGo || !useEnemyDetection) {
+      for (int i = 0; i < 4; i++) {
+        if (speeds[i] != 0) {
+          digitalWrite(stp[i], t % 2 == 0 ? HIGH : LOW);
+        }
       }
+      delayMicroseconds(del);
+    } else {
+      t--;
     }
-    delayMicroseconds(del);
   }
 }
 
