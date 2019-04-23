@@ -1,6 +1,8 @@
 const int trigs[6] = {8, 9, 10, 11, 12, 13};
 const int echos[6] = {2, 3, 4,  5,  6,  7};
-
+//4 eh, 10
+//5, 11 
+//6, 12
 const int MAX_DIST = 25;
 
 long duration;
@@ -30,18 +32,16 @@ void loop() {
 
     duration = pulseIn(echos[i], HIGH);
     int dst = duration * 0.034 / 2;
-    if (dst < distance) {
-      distance = dst;
-    }
+    Serial.println((String)i + " " + (String)dst);
   }
 
-  if (distance < MAX_DIST && !stopped) {
-    //    Serial.println("Stop");
-    digitalWrite(A1, HIGH);
-    stopped = true;
-  } else if (stopped && distance >= MAX_DIST) {
-    //    Serial.println("Go");
-    digitalWrite(A1, LOW);
-    stopped = false;
-  }
+//  if (distance < MAX_DIST || !stopped) {
+//        Serial.println(distance);
+//    digitalWrite(A1, HIGH);
+//    stopped = true;
+//  } else if (stopped && distance >= MAX_DIST) {
+//    //    Serial.println("Go");
+//    digitalWrite(A1, LOW);
+//    stopped = false;
+//  }
 }
