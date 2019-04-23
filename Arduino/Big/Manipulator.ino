@@ -5,12 +5,15 @@ PCA9685 driver;
 PCA9685_ServoEvaluator pwmServo(102, 470);
 
 void setAngle(int servo_id, int angle) {
+  if (servo_id == B_level) {
+    angle -= 40;
+  }
   driver.setChannelPWM(servo_id, pwmServo.pwmForAngle(servo_id != C_level ? angle : angle - 20));
 }
 
 void levelDown() {
   setAngle(A_level, -30);
-  setAngle(B_level, -50);
+  setAngle(B_level, -20);
   setAngle(C_level, 50);
 }
 

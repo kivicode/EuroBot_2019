@@ -1,12 +1,13 @@
 void firstSix() {
-  mov(600, 0);
+  mov(500, 0);
   mov(100, 270);
   mov(500, 90);
   mov(100, 0);
-  mov(230, 90);
+  mov(355, 90);
   mov(100, 0);
   mov(150, 180);
 
+  del = 1600;
 
   pompsMid();
   enablePomp();
@@ -23,9 +24,9 @@ void firstSix() {
   disablePomp();
   left(5);
 
-
+  //  del = 1000;
   mov(250, 0);
-  mov(200, 270);
+  mov(260, 270);
   mov(120, 0);
   mov(200, 180);
   left(2);
@@ -46,7 +47,7 @@ void firstSix() {
   left(5);
 
   mov(300, 0);
-  mov(102, 270);
+  mov(145, 270);
   mov(90, 0);
   mov(100, 180);
   pompsMid();
@@ -72,10 +73,10 @@ void firstSix() {
   delay(300);
   kickC();
   disablePomp();
-  levelUp();
 }
 
 void grabNearTrap() {
+  del = 900;
   kickA();
   kickB();
   kickC();
@@ -114,11 +115,11 @@ void grabNearTrap() {
 }
 
 void putOnScales() {
-  mov(100, 0);
+  mov(300, 0);
   mov(600, 180);
-  mov(990, 90);
+  mov(1000, 90);
   mov(350, 0);
-  mov(250, 90);
+  mov(240, 90);
   mov(100, 0);
   mov(150, 180);
   mov(45, 270);
@@ -172,16 +173,19 @@ void putOnScales() {
 }
 
 void goToSpeeder() {
+  mov(100, 0);
+  mov(100, 90);
   mov(400, 180);
-  right(90);
+  pompsDown();
+  right(94);
   mov(700, 0);
-  right(93);
+  right(99);
   mov(750, 0);
   mov(200, 0);
   del = 1700;
   mov(30, 270);
-  mov(90, 270);
-  mov(50, 0);
+  mov(350, 270);
+  mov(150, 0);
 }
 
 void putOnSpeeder() {
@@ -213,19 +217,47 @@ void putOnSpeeder() {
   mov(100, 180);
 }
 
+void grabBlue() {
+  del = 1100;
+  mov(200, 180);
+  pompsDown();
+  setAngle(A_level, 90);
+  grabA();
+  enablePomp();
+  mov(115 + 320, 90);
+  left(2);
+  mov(400, 0);
+  mov(100, 90);
+  mov(100, 180);
+}
+
 void grabGoldenium() {
+  //  del = 800;
   setAngle(B_level, 90);
   grabB();
   enablePomp();
-  mov(290, 270);
+  mov(317, 270);
   mov(150, 0);
 }
 
 void goBackToScales() {
-  mov(400, 180);
-  right(84);
-  mov(900, 0);
-  right(96);
-  mov(870, 0);
-  mov(100, 90);
+  del = 900;
+  right(150);
+  mov(1050, 0);
+  right(40);
+  mov(250, 0);
+  mov(250, 90);
+  mov(150, 0);
+  levelUp();
+  mov(100, 180);
+  grabA();
+  grabB();
+  delay(600);
+  mov(150, 0);
+  kickB();
+  kickA();
+}
+
+void kickGoldenium() {
+  kickB();
 }

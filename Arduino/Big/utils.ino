@@ -1,3 +1,5 @@
+#include <Movement.h>
+
 #define F HIGH
 #define B LOW
 #define YELLOW 1
@@ -166,28 +168,26 @@ void kickTwo() {
     setAngle(B_level, -90);
   }
   mov(100, 0);
-  mov(k == 0 ? 75 : 103, 180);
-  if (k == 1) {
-    right(3);
-  }
+  mov(75, 180);
+
   if (k == 0) {
     mov(30, 90);
   } else {
-    mov(50, 270);
+    mov(60, 270);
   }
   digitalWrite(B_grab, LOW);
   digitalWrite(B_kick, HIGH);
   digitalWrite(C_grab, LOW);
   digitalWrite(C_kick, HIGH);
   enablePomp();
-  setAngle(B_level, 90);
+  setAngle(B_level, 100);
   setAngle(C_level, -40);
   grabB();
   setAngle(B_pomp, 0);
   grabC();
   setAngle(C_pomp, 65);
   delay(500);
-  mov(100, 0);
+  mov(150, 0);
   mov(24, 180);
   delay(500);
   disablePomp();
