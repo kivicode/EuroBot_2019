@@ -1,26 +1,16 @@
 from utils import *  # импорт некоторых полезных функци
 from api import *
 import numpy as np
-from matplotlib.colors import to_rgba as rgb
 
 POINTS = []
-
 lowers = {}  # массив с нижними уровнями для 3 цветов
 uppers = {}  # массив с верхними уровнями для 3 цветов
 
-colors = [
-    'green',
-    'white',
-    'blue',
-    'red'
-]
-
-pucks = {colors[0]: [], colors[1]: [], colors[2]: [], colors[3]: []}  # массив с шайбами
-
-start_grabbing = False
-
+colors = ['green', 'white', 'blue', 'red']
+pucks = {colors[0]: [], colors[1]: [], colors[2]: [], colors[3]: []}  # кортеж с шайбами
 color_index = 0
 
+start_grabbing = False
 
 def press(event, x, y, *kw):  # функция выбора пикселя для настройки цвета
     if event == cv2.EVENT_LBUTTONDBLCLK:
@@ -40,24 +30,24 @@ def setup():  # первый цикл настройки, вызывается �
     cv2.namedWindow("Final")
     cv2.setMouseCallback('Final', press)
 
-    for i in colors:
-        POINTS = []
-        while True:
-            frame = getImage()
-            print(rgb(i)[::-1][1:][::-1])
-            cv2.putText(frame, "Select %s color" % i, (10, 40), 2, 1, tuple([i * 255 for i in rgb(i)[::-1][1:]]))
-            cv2.imshow('Final', frame)
-            if cv2.waitKey(1) & 0xFF == ord('p') or len(POINTS) == 1:
-                blurred = cv2.GaussianBlur(frame, (11, 11), 0)  # блюр
-                hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)  # перевод в HSV
-                pix = hsv[POINTS[0][1], POINTS[0][0]]
-                calibrate(pix, i)
-                break
+    # for i in colors:
+    i = colors[0]
+    POINTS = []
+    while True:
+        frame = getImage()
+        cv2.putText(frame, "Select %s color" % i, (10, 40), 2, 1, (255, 255, 250))
+        cv2.imshow('Final', frame)
+        if cv2.waitKey(1) & 0xFF == ord('p') or len(POINTS) == 1:
+            blurred = cv2.GaussianBlur(frame, (11, 11), 0)  # блюр
+            hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)  # перевод в HSV
+            pix = hsv[POINTS[0][1], POINTS[0][0]]
+            calibrate(pix, i)
+            break
 
-    initialize()
+    #initialize()
     print("start")
     # input("Enter something: ")
-    do("first", wait=True)
+    # do("first", wait=True)
     print("Start")
     time.sleep(.5)
 
@@ -74,8 +64,8 @@ def get_cur_puck(orig):
     mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)  # фильтрация шумов
     mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 
-    _, contours, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
-                                      cv2.CHAIN_APPROX_SIMPLE)  # поиск контуров шайб
+    contours, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
+                                   cv2.CHAIN_APPROX_SIMPLE)  # поиск контуров шайб
     pucks[colors[color_index]].clear()  # чистка массива  шайб для нового кадра
     h, w, c = orig.shape  # размеры картинки
     cv2.line(orig, (int(w / 2), 0), (int(w / 2), h),
@@ -104,16 +94,15 @@ def main():  # основной цикл
         if y > y_max:
             y_max = y
             goal = purple
-    text = ""
-    goal_y = 671  # целевое значение по игреку (для манипулятора)
-    tolerance_x = 60  # чуствительность по иксу
-    tolerance_y = 20  # чуствительность по игреку
+    goal_y = 371  # целевое значение по игреку (для манипулятора)
+    tolerance_x = 40  # чуствительность по иксу
+    tolerance_y = 10  # чуствительность по игреку
 
+    text = ""
     cmdA = ""
     cmdB = ""
 
-    shift_x = -10
-
+    shift_x = 10
     if abs(goal[0] - ((w / 2) + shift_x)) < tolerance_x:
         text = "OK"
     elif goal[0] < (w / 2) + shift_x:
@@ -132,8 +121,8 @@ def main():  # основной цикл
         text += "  Go Backward"
         cmdB = 'cb()'
 
-    do(cmdA)
-    do(cmdB)
+    # do(cmdA)
+    # do(cmdB)
 
     if text == 'OK  OK':
         do("get", wait=True)
@@ -142,6 +131,7 @@ def main():  # основной цикл
         color_index += 1
 
     cv2.circle(orig, goal, 10, (0, 0, 255), -1)  # отмечаем целевую шайбу красным цветом
+    cv2.circle(orig, (int(w / 2), goal_y), 10, (0, 255, 0), -1)  # отмечаем целевую шайбу красным цветом
     cv2.putText(orig, text, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0),
                 3)  # рисуем указания по движению робота
 

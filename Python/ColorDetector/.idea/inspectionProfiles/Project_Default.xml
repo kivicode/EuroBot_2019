@@ -1,7 +1,22 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
-    <inspection_tool class="PyBroadExceptionInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
-    <inspection_tool class="PyTypeCheckerInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="9">
+            <item index="0" class="java.lang.String" itemvalue="opencv-contrib-python" />
+            <item index="1" class="java.lang.String" itemvalue="opencv-engine" />
+            <item index="2" class="java.lang.String" itemvalue="opencv-rolling-ball" />
+            <item index="3" class="java.lang.String" itemvalue="opencv-contrib-python-headless" />
+            <item index="4" class="java.lang.String" itemvalue="opencv-python" />
+            <item index="5" class="java.lang.String" itemvalue="imutils" />
+            <item index="6" class="java.lang.String" itemvalue="opencv-utils" />
+            <item index="7" class="java.lang.String" itemvalue="numpy" />
+            <item index="8" class="java.lang.String" itemvalue="opencv-python-headless" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
   </profile>
 </component>

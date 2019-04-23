@@ -1,7 +1,6 @@
-import cv2
+from utils import *
 import serial
 import time
-from api import *
 import numpy as np
 import math
 import cv2.aruco as aruco
@@ -13,6 +12,7 @@ PORT = 'COM10'
 zanyato = -1
 inside = [0, 0, 0, 0]
 points = []
+pizda=0
 lowers = {}  # массив с нижними уровнями для 3 цветов
 uppers = {}  # массив с верхними уровнями для 3 цветов
 colors = ['green', 'blue', 'red']
