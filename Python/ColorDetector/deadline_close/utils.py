@@ -1,20 +1,20 @@
 import cv2
 import cv2.aruco as aruco
 
-parameters = aruco.DetectorParameters_create()
-dictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
-
-cap = cv2.VideoCapture("http://10.5.5.9:8080/live/amba.m3u8")
-while True:
-ret, frame = cap.read()
-frame=cv2.resize(frame,(1080,720))
-
-cv2.imshow("GoPro OpenCV", frame)
-
-if cv2.waitKey(1) & 0xFF == ord('q'):
-break
-
-cap.release()
+# parameters = aruco.DetectorParameters_create()
+# dictionary = aruco.Dictionary_get(aruco.DICT_6X6_250)
+#
+# cap = cv2.VideoCapture("http://10.5.5.9:8080/live/amba.m3u8")
+# while True:
+#     ret, frame = cap.read()
+#     frame=cv2.resize(frame,(1080,720))
+#
+#     cv2.imshow("GoPro OpenCV", frame)
+#
+#     if cv2.waitKey(1) & 0xFF == ord('q'):
+#         break
+#
+# # cap.release()
 
 def getMarkers(gray, debug=False):
     markers = {}
@@ -33,16 +33,16 @@ def getMarkers(gray, debug=False):
             i += 1
     return markers
 
-camA = cv2.VideoCapture(0)
-
-while True:
-    _, frame = camA.read()
-    gray = frame
-    cv2.imshow('Fin', gray)
-    markers = getMarkers(gray, debug=True)
-    print(markers)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-
-cv2.destroyAllWindows()
+# camA = cv2.VideoCapture(0)
+#
+# while True:
+#     _, frame = camA.read()
+#     gray = frame
+#     cv2.imshow('Fin', gray)
+#     markers = getMarkers(gray, debug=True)
+#     print(markers)
+#     if cv2.waitKey(1) & 0xFF == ord('q'):
+#         break
+#
+#
+# cv2.destroyAllWindows()

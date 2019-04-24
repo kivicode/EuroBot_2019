@@ -9,18 +9,19 @@ int R = 1;
 
 int angles[5] = {0, 0, 0, 0, 0};
 
-int pomp = 8  ; //13 12 35 8 9
+int pomp = 4  ; //13 12 35 8 9
+int otpusk = 3;
 #define shmor 33
-#define storona 31
-#define LeftMotorBackwardPin 49
-#define LeftMotorForwardPin 51
-#define LeftMotorSpeedPin 50
-#define LeftEncoderPin 41 //43
+#define storona 2
+#define LeftMotorBackwardPin 15
+#define LeftMotorForwardPin 16
+#define LeftMotorSpeedPin 14
+#define LeftEncoderPin 43
 
-int RightMotorBackwardPin = A9;
-int RightMotorForwardPin = A8;
-int RightMotorSpeedPin = A10;
-#define RightEncoderPin 42 //40
+#define RightMotorBackwardPin 17
+#define RightMotorForwardPin  18
+#define RightMotorSpeedPin  19
+#define RightEncoderPin 45
 
 String SUC = "~";  // символ успешного выполнения команды (см. api.py)
 String ERR = "|";  // символ ошибки выполнения команды (см. api.py)
@@ -36,6 +37,7 @@ void setup() {
   Serial.begin(9600);
   Serial.println("StarT");
   pinMode(pomp, OUTPUT);
+  pinMode(otpusk, OUTPUT);
   pinMode(LeftMotorForwardPin, OUTPUT);
   pinMode(LeftMotorBackwardPin, OUTPUT);
   pinMode(RightMotorForwardPin, OUTPUT);
@@ -59,6 +61,7 @@ void setup() {
 //  smeh();
 //  delay(3000);
 //  ostrich();
+//  Serial.println("Pizda");
   go(250, 250);
   delay(20000);
   go(-250, -250);
@@ -74,10 +77,6 @@ void setup() {
 }
 
 void loop() {
-  go(250, 250);
-  delay(10000);
-  go(0, 0);
-  delay(100000);
   while (Serial.available() > 0) {  // ждём команду
     String in = String(Serial.readStringUntil('\n'));  // считывание строки
     if (in != "") {

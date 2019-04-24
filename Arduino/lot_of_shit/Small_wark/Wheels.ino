@@ -1,135 +1,48 @@
+ float TicksInRotation = 400;
+float WheelLength = 4 * PI * 2;
 
 
-//
-//int total_ticks = 0;
-//
-//void forward(int dist) {
-//  int times = dist / 2;
-//  total_ticks = 0;
-//  for (int i = 0; i < times; i++) {
-//    cf(true);
-//  }
-//}
-//
-//void cf (bool smooth) {
-//  long int ticks = cm2tick(2);
-//  //  analogWrite(LeftMotorSpeedPin, SIDE == PURPLE ? 90 : 60);
-//  //  analogWrite(RightMotorSpeedPin, SIDE == PURPLE ? 60 : 100);
-//
-//  digitalWrite(LeftMotorForwardPin, HIGH);
-//  digitalWrite(RightMotorForwardPin, HIGH);
-//  if (!smooth) {
-//    total_ticks = 0;
-//  }
-//  go(ticks, SIDE == PURPLE ? 200 : 120, SIDE == PURPLE ? 60 : 100, false);
-//
-//  digitalWrite(LeftMotorForwardPin, LOW);
-//  digitalWrite(RightMotorForwardPin, LOW);
-//}
-//
-//void c_f() {
-//  int dist = 8;
-//  int times = dist / 2;
-//  total_ticks = 0;
-//  for (int i = 0; i < times; i++) {
-//    cf(false);
-//  }
-//}
-//
-//void backward(int dist) {
-//
-//  long int ticks = cm2tick(dist);
-//  analogWrite(LeftMotorSpeedPin, 200);
-//  analogWrite(RightMotorSpeedPin, 90);
-//
-//  digitalWrite(LeftMotorBackwardPin, HIGH);
-//  digitalWrite(RightMotorBackwardPin, HIGH);
-//  go(ticks, SIDE == PURPLE ? 100 : 60, SIDE == PURPLE ? 60 : 100, false);
-//
-//  digitalWrite(LeftMotorBackwardPin, LOW);
-//  digitalWrite(RightMotorBackwardPin, LOW);
-//}
-//
-//void backward_calib(int dist) {
-//
-//  analogWrite(LeftMotorSpeedPin, 200);
-//  analogWrite(RightMotorSpeedPin, 90);
-//
-//  digitalWrite(LeftMotorBackwardPin, HIGH);
-//  digitalWrite(RightMotorBackwardPin, HIGH);
-//  delay(dist);
-//
-//  digitalWrite(LeftMotorBackwardPin, LOW);
-//  digitalWrite(RightMotorBackwardPin, LOW);
-//}
-//
-//void left(int dist) {
-//
-//  long int ticks = cm2tick(dist);
-//  analogWrite(LeftMotorSpeedPin, 200);
-//  analogWrite(RightMotorSpeedPin, 90);
-//
-//  digitalWrite(LeftMotorBackwardPin, HIGH);
-//  digitalWrite(RightMotorForwardPin, HIGH);
-//  go(ticks, SIDE == PURPLE ? 100 : 60, SIDE == PURPLE ? 60 : 100, false);
-//
-//  digitalWrite(LeftMotorBackwardPin, LOW);
-//  digitalWrite(RightMotorForwardPin, LOW);
-//}
-//
-//void right(int dist) {
-//
-//  long int ticks = cm2tick(dist);
-//  analogWrite(LeftMotorSpeedPin, 200);
-//  analogWrite(RightMotorSpeedPin, 90);
-//
-//  digitalWrite(LeftMotorForwardPin, HIGH);
-//  digitalWrite(RightMotorBackwardPin, HIGH);
-//  go(ticks, SIDE == PURPLE ? 100 : 60, SIDE == PURPLE ? 60 : 100, false);
-//
-//  digitalWrite(LeftMotorForwardPin, LOW);
-//  digitalWrite(RightMotorBackwardPin, LOW);
-//}
-//
-////long int cm2tick(float cm) {
-////  cm /= 10.0;
-////  float rotates = (float)cm / (float)WheelLength;
-////  return rotates * TicksInRotation;
-////}
-//
-//
-//void go(int ticks, int gL, int gR, bool sm) {
-//  int counter = 1;
-//  int lastState = 0;
-//  Serial.println(ticks);
-//  int L, R, stepL = 0, stepR = 0;
-//  if (sm) {
-//    L = gL / 2;
-//    R = gR / 2;
-//    stepL = L / 5;
-//    stepR = R / 5;
-//    L += 20;
-//    R += 20;
-//  } else {
-//    L = gL;
-//    R = gR;
-//  }
-//  Serial.println(ticks);
-//  while (counter <= ticks) {
-//    int cur = digitalRead(RightEncoderPin);
-//    if (sm) {
-//      if (total_ticks <  500 && counter % 10 == 0) {
-//        L += stepL;
-//        R += stepR;
-//      }
-//    }
-//    analogWrite(LeftMotorSpeedPin, L);
-//    analogWrite(RightMotorSpeedPin, R);
-//    if (cur != lastState) {
-//      lastState = cur;
-//      counter = counter + 1;
-//      total_ticks++;
-//    }
-//    Serial.println(total_ticks);
-//  }
-//}
+long int cm2tick(float cm) {
+  cm /= 10.0;
+  float rotates = cm / WheelLength;
+  return rotates * TicksInRotation;
+}
+
+void go (int L, int R) { //work
+  digitalWrite(LeftMotorBackwardPin, L > 0 ? LOW : HIGH);
+  digitalWrite(RightMotorBackwardPin, R > 0 ? LOW : HIGH);
+  digitalWrite(LeftMotorForwardPin,  L > 0 ? HIGH : LOW);
+  digitalWrite(RightMotorForwardPin,  R > 0 ? HIGH : LOW);
+  analogWrite(LeftMotorSpeedPin, L);
+  analogWrite(RightMotorSpeedPin, R);
+}
+
+void go_by_encoders (int left_need, int right_need, int L, int R) { //maybe work
+  int right_ticks = 0;
+  int left_ticks = 0;
+  int lp = 0;
+  int rp = 0;
+  int r_tick = 0 ;
+  int l_tick = 0;
+  
+  while ((right_ticks < right_need) or (left_ticks < left_need)) {
+    go(L, R);
+    r_tick = digitalRead(RightEncoderPin);
+    l_tick = digitalRead(LeftEncoderPin);
+    if (r_tick != rp) {
+      right_ticks++;
+      rp = r_tick;
+      Serial.print("right ");
+      Serial.println(right_ticks);
+    }
+    if (l_tick != lp) {
+      left_ticks++;
+      lp = l_tick;
+      Serial.print("left ");
+      Serial.println(left_ticks);
+    }
+    if (right_ticks >= right_need) R=0;
+    if (left_ticks >= left_need) L=0;
+  }
+  go(0, 0);
+}

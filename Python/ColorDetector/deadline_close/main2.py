@@ -5,6 +5,7 @@ import numpy as np
 import math
 import cv2.aruco as aruco
 import urllib
+import cv2
 
 camA = cv2.VideoCapture(1)
 PORT = 'COM10'
@@ -16,14 +17,13 @@ pizda=0
 lowers = {}  # массив с нижними уровнями для 3 цветов
 uppers = {}  # массив с верхними уровнями для 3 цветов
 colors = ['green', 'blue', 'red']
+field = ['green_field', 'blue_field', 'red_field']
 index = 0
 pucks = {colors[0]: [], colors[1]: [], colors[2]: []}
 
+init = 0
 aruco_dict = aruco.Dictionary_get(aruco.DICT_6X6_250)
 parameters = aruco.DetectorParameters_create()
-
-import serial
-import time
 
 serials = {}
 
@@ -55,9 +55,11 @@ API = {'forward': 'f(%d)',  # Ехать вперёд на Х см
 
 def initialize():
     global ser_wheels
+    global init
     ser_wheels = serial.Serial(PORT, 9600, timeout=1)
     time.sleep(1)
     print('Can start')
+    init = 1
 
 
 def send(ser, cmd):
@@ -91,20 +93,24 @@ def wait_for(ser, symbol, max_time=-1):
 
 
 def do(request, wait=False):
-    """Пыается выплнить и ждёт, пока не придёт ответ"""
-    ser = ser_wheels
-    send(ser, request + '\n')  # отправка запроса
-    print(request)
+    global init
+    if init == 1:
+        """Пыается выплнить и ждёт, пока не придёт ответ"""
+        ser = ser_wheels
+        send(ser, request + '\n')  # отправка запроса
+        print(request)
 
-    if wait:
-        if wait_for(ser, RECIEVED, 1) == -2:
-            print('Command was not received {}'.format(request))
-            return
-        if wait_for(ser, SUCCESS, 1) == -1:
-            print("Something happened while executing this command: %s" % request)
-        else:
-            print("Successfully complete: %s" % request)
-    # time.sleep(0.4)
+        if wait:
+            if wait_for(ser, RECIEVED, 1) == -2:
+                print('Command was not received {}'.format(request))
+                return
+            if wait_for(ser, SUCCESS, 1) == -1:
+                print("Something happened while executing this command: %s" % request)
+            else:
+                print("Successfully complete: %s" % request)
+        # time.sleep(0.4)
+    else:
+        print('no device connected')
 
 
 def press(event, x, y, z, k):  # функция выбора пикселя для настройки цвета
@@ -136,6 +142,19 @@ def first():
             cv2.putText(frame, "Select %s color" % i, (10, 40), 2, 1, (255, 255, 250))
             cv2.imshow('Final', frame)
             if cv2.waitKey(1) & 0xFF == ord('p') or len(points) == 1:
+                print('pizdec')
+                blurred = cv2.GaussianBlur(frame, (11, 11), 0)  # блюр
+                hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)  # перевод в HSV
+                pixel = hsv[points[0][1], points[0][0]]
+                calibrate(pixel, i, 40)
+                break
+    for i in field:
+        points = []
+        while True:
+            frame = getImage()
+            cv2.putText(frame, "Select %s color" % i, (10, 40), 2, 1, (255, 255, 250))
+            cv2.imshow('Final', frame)
+            if cv2.waitKey(1) & 0xFF == ord('p') or len(points) == 1:
                 blurred = cv2.GaussianBlur(frame, (11, 11), 0)  # блюр
                 hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)  # перевод в HSV
                 pixel = hsv[points[0][1], points[0][0]]
@@ -143,8 +162,7 @@ def first():
                 break
     print("start")
 
-
-def transform(frame, index):
+def transform(frame):
     blurred = cv2.GaussianBlur(frame, (11, 11), 0)  # блюр
     hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)  # перевод в HSV
     kernel = np.ones((10, 10), np.uint8)  # настройка ядра для морфологических преобразований
@@ -198,7 +216,7 @@ def drive(goall, frame):
     tolerance_y = 10
     change_max = 0.1
     change_min = 0.1
-    speed = 90
+    speed = 100
     shift = 0
     goal_y = 371
     motL = str(speed)
@@ -235,7 +253,7 @@ def take_puck():
         if cv2.waitKey(1):
             frame = getImage()
             for i in range(3):
-                shok = transform(frame, i)
+                shok = transform(frame)
                 get_pucks(shok, frame, i)
             goal = find_goal(frame)
             print(goal[1])
@@ -378,41 +396,13 @@ def pizda():
     resized = cv2.resize (image, (400, 300))
     return resized
 
-
-import subprocess as sp
-FFMPEG_BIN = "ffmpeg.exe" # on Windows
-VIDEO_URL = "http://10.5.5.9:8080/live/amba.m3u8"
-
-cv2.namedWindow("GoPro")
-
-pipe = sp.Popen([ FFMPEG_BIN, "-i", VIDEO_URL,
-           "-loglevel", "quiet", # no text output
-           "-an",   # disable audio
-           "-f", "image2pipe",
-           "-pix_fmt", "bgr24",
-           "-vcodec", "rawvideo", "-"],
-           stdin = sp.PIPE, stdout = sp.PIPE)
-while True:
-    raw_image = pipe.stdout.read(432*240*3) # read 432*240*3 bytes (= 1 frame)
-    image =  np.fromstring(raw_image, dtype='uint8').reshape((240,432,3))
-    cv2.imshow("GoPro", image)
-    if cv2.waitKey(5) == 27:
-        break
-cv2.destroyAllWindows()
-##first()
+cv2.namedWindow("Final")
+first()
 # initialize()
-
-
-# cv2.namedWindow("Final")
-# while 1 == 1:
-#     image = pizda()
-#     cv2.imshow("Final", image)
-#     cv2.waitKey(0)
-
 # while wait_for(ser_wheels, SUCCESS, 1) != 1:
 #     do("for(100, 100)")
-# # get_state()
-# start_time = time.time()
+start_time = time.time()
+take_puck()
 # while time.time() - start_time < 0.3:
 #     do("for(100, 100)")
 # push_atom()
