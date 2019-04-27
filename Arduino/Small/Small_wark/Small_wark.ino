@@ -1,17 +1,14 @@
 // r- speed
 #include <Wire.h>
-//#include "PCA9685.h"
-//PCA9685 driver;
-//PCA9685_ServoEvaluator pwmServo(102, 470);
 #include <LiquidCrystal_I2C.h>
 
 LiquidCrystal_I2C lcd(0x3F, 16, 2); // set the LCD address to 0x27 for a 16 chars and 2 line display
 #include <Servo.h>
-#define servo00 5 
-#define servo11 7 
-#define servo22 9
-#define servo33 6
-#define servo44 8
+#define servo00 4
+#define servo11 8
+#define servo22 6
+#define servo33 5
+#define servo44 7
 int L = 0;
 int R = 1;
 
@@ -67,9 +64,6 @@ void enemy() {
 void setup() {
   Wire.begin();
   Wire.setClock(400000);
-  //  driver.resetDevices();
-  //  driver.init(B000000);
-  //  driver.setPWMFrequency(50);
   Serial.begin(9600);
   pinMode(pomp, OUTPUT);
   pinMode(otpusk, OUTPUT);
@@ -102,65 +96,23 @@ void setup() {
   lcd.setCursor(0, 1);
   lcd.print("pizza pizza pizza pizda pizda pizda");
   disablePomp();
-  //  while (1==1){
-  //    go(150, 150);
-  //  }
-  //  smeh();
   go(0, 0);
-  servo4.write(90);
-  delay(700);
-  servo4.write(0);
-  delay(700);
-  servo4.write(-90);
-  delay(100000);
-  ostrich();
-
-  //  delay(3000);
-  //  smeh();
-  //  delay(3000);
-  //  grab();
-  //  delay(3000);
-  //  go(0, 0);
-  //
-  //    while (1 == 1) {
-  //      go(-150, -150);
-  //    }
-  //  ostrich();
-  //////
-  //  enablePomp(); //!!
-  //  delay(300);
-  //  setAngle(2, 90);
-  //  delay(300);
-  //  setAngle(0, 0);
-  //  delay(300);
-  //  setAngle(1, -28);
-  //  delay(300);
-  //  setAngle(2, 90);
-  //  delay(300);
-  //  setAngle(3, 38);
-  //  delay(300);
-  //  setAngle(2, 38);
-  //  delay(300);
-  //  setAngle(4, 20);
-  //  delay(300);
-  //  setAngle(1, 8);
-  //  delay(4000);
-  //  enablePomp();
-  //  setAngle(3, 80);
-  //  delay(300);
-  //  disablePomp();
-  //  setAngle(3, 10);
-  //  delay(300);
-  //
+  servo0.write(0);
+//   servo1.write(20);
+  
 
   while ( digitalRead(shmor) == 0) {
     Serial.println("Waiting...");
   }
-
+  
+  servo0.write(90);
   first_arduino();
-
+  servo0.write(0);
+  
   Serial.print(SUC);
   Serial.println("Ready");
+  smert();
+  delay(10000);
 }
 
 

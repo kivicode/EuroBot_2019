@@ -1,25 +1,35 @@
 void smert() {
-  ostrich();
   while (1 == 1) {
     disablePomp();
     go(0, 0);
   }
 }
 void first_arduino () {
-  smeh();
-//  int storon = digitalRead(storona);
-//  ///////запуск атома
-//  for (int i = 0; i < 40; i++) {
-    go_by_encoders(30, 30, 150, 150);
+  //  int storon = digitalRead(storona);
+  //  ///////запуск атома
+  for (int i = 0; i < 40; i++) {
+    go(150, 150);
     delay(10);
     go(0, 0);
     delay(20);
-//  };
-//go(150, 150);
-//delay(500);
-//go(0,0);
-//  lcd.setCursor(0, 0);
-//  lcd.print("ya pnul atom!65");
+  };
+    for (int i = 0; i < 20; i++) {
+    go(-150, -150);
+    delay(10);
+    go(0, 0);
+    delay(20);
+  };
+    for (int i = 0; i < 30; i++) {
+    go(150, 150);
+    delay(10);
+    go(0, 0);
+    delay(20);
+  };
+  //go(150, 150);
+  //delay(500);
+  //go(0,0);
+  //  lcd.setCursor(0, 0);
+  //  lcd.print("ya pnul atom!65");
   //
   //  /// поворот
   //  go(-150, -150);
@@ -39,22 +49,21 @@ void first_arduino () {
   //    }
   //  }
   go(0, 0);
-  ostrich();
 }
 
 void two_arduino() {
   int storon = digitalRead(storona);
-  takeLU();
+ // takeLU();
   go(storon == 0 ? 150 : 0, storon == 0 ? 0 : 150);
   delay(50);
   go(0, 0);
-  putLU();
+  //putLU();
   lcd.setCursor(0, 0);
   lcd.print("vikinul red!65");
 }
 void three_arduino(int action) {
   int storon = digitalRead(storona);
-  takeLU();
+//  takeLU();
   for (int i = 0; i < 6; i++) {
     go(150, 150);
     delay(10);
@@ -62,7 +71,7 @@ void three_arduino(int action) {
     delay(40);
   };
   go(0, 0);
-  putLU();
+ // putLU();
   lcd.setCursor(0, 0);
   lcd.print("vikinul red!75");
   if (action == 2) {
