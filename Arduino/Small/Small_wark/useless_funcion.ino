@@ -7,24 +7,25 @@ void smert() {
 void first_arduino () {
   //  int storon = digitalRead(storona);
   //  ///////запуск атома
-  for (int i = 0; i < 40; i++) {
+  for (int i = 0; i < 50; i++) {
     go(150, 150);
     delay(10);
     go(0, 0);
     delay(20);
   };
-    for (int i = 0; i < 20; i++) {
+    for (int j = 0; j < 25; j++) {
     go(-150, -150);
     delay(10);
     go(0, 0);
     delay(20);
   };
-    for (int i = 0; i < 30; i++) {
+    for (int k = 0; k < 35; k++) {
     go(150, 150);
     delay(10);
     go(0, 0);
     delay(20);
   };
+  go(0,0);
   //go(150, 150);
   //delay(500);
   //go(0,0);
@@ -48,7 +49,6 @@ void first_arduino () {
   //      smert();
   //    }
   //  }
-  go(0, 0);
 }
 
 void two_arduino() {
