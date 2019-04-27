@@ -14,7 +14,7 @@ PORT = 'COM10'
 zanyato = -1
 inside = [0, 0, 0, 0]
 points = []
-pizda=0
+pizda = 0
 shmor = ''
 lowers = {}  # массив с нижними уровнями для 3 цветов
 uppers = {}  # массив с верхними уровнями для 3 цветов
@@ -35,23 +35,17 @@ REFUSED = '|'  # символ ошибки выполнения
 WHEELS = 0
 MANIPULATOR = 1
 
+colors = ['green', 'white', 'blue', 'red']
+pucks = {colors[0]: [], colors[1]: [], colors[2]: [], colors[3]: []}  # кортеж с шайбами
+color_index = 0
+
+start_grabbing = False
+
+action_index = 0
+
+SIDE = 'PURPLE'
+
 PORT = 'COM10'
-
-API = {'forward': 'f(%d)',  # Ехать вперёд на Х см
-       'backward': 'b(%d)',  # Ехать назад на Х см
-       'left': 'l(%d)',  # Повернуть влево на Х градусов
-       'right': 'r(%d)',  # Повернуть вправо на Х градусов
-
-       'calibrate forward': 'cf()',
-       'calibrate backward': 'cb()',
-       'calibrate left': 'cl()',
-       'calibrate right': 'cr()',
-
-       'grab': 'get()',
-
-       'manipulator up': 'mu()',
-       'manipulator down': 'md()'  # Опустить манипулятор + взять присоской
-       }
 
 
 def initialize():
@@ -91,7 +85,6 @@ def wait_for(ser, symbol, max_time=-1):
         elif data.find(REFUSED) != -1:  # Возвращает код ошибки, если ардуино не смогла выплнить
             # print(data)
             return -1
-
 
 
 def do(request, wait=False, extra=False):
@@ -167,6 +160,7 @@ def first():
                 calibrate(pixel, i, 40)
                 break
     print("start")
+
 
 def transform(frame):
     blurred = cv2.GaussianBlur(frame, (11, 11), 0)  # блюр
@@ -269,63 +263,6 @@ def take_puck():
                 break
 
 
-def push_atom():
-    fails = 0
-    while fails <= 120:
-        if cv2.waitKey(1):
-            _, frame = camA.read()
-            corners, ids, _ = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
-            detect = aruco.drawDetectedMarkers(frame, corners)
-
-            print('pizda')
-            goal = [0, 0]
-            if len(corners) > 0:
-                goal = [(corners[0][0][0][0] + corners[0][0][1][0]) / 2,
-                        (corners[0][0][0][1] + corners[0][0][2][1]) / 2]
-            h, w, c = frame.shape  # размеры картинки
-            cv2.line(frame, (int(w / 2), 0), (int(w / 2), h),
-                     (0, 255, 0))  # рисуем верт линию в центре экрана (для дебага)
-
-            tolerance_x = 30  # чуствительность по иксу
-            tolerance_y = 20
-            shift = 0
-            goal_y = 106
-            motL = str(0)
-            motR = str(0)
-
-            if abs(goal[0] - ((w / 2))) < tolerance_x:
-                motL = str(150)  # str(int(speed))
-                motR = str(150)  # str(int(speedR))
-            elif goal[0] > (w / 2) + shift:
-                motL = str(0)  # str(int(speed + abs(goal[0] - (w / 2)) * change_max))
-                motR = str(150)  # str(int(speedR - abs(goal[0] - (w / 2)) * change_min))
-            elif goal[0] < (w / 2) + shift:
-                motL = str(150)  # str(int(speed - abs(goal[0] - (w / 2)) * change_min))
-                motR = str(0)  # str(int(speedR + abs(goal[0] - (w / 2)) * change_max))
-            frame = cv2.flip(frame, 0)
-            cv2.putText(frame, motL, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3)
-            cv2.putText(frame, motR, (400, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3)
-            cv2.imshow('Final', frame)
-
-            if abs(goal[1] - goal_y) < tolerance_y:
-                motL = str(0)
-                motR = str(0)
-                break
-            elif goal[1] < goal_y:
-                motL *= -1
-                motR *= -1
-
-            if ids is None:
-                motL = str(0)
-                motR = str(0)
-                fails += 1
-            else:
-                fails = 0
-            print(motL, motR)
-            do("for(%s, %s)" % (motL, motR))
-            time.sleep(0.04)
-
-
 def get_state():
     if cv2.waitKey(1):
         _, frame = camA.read()
@@ -393,30 +330,6 @@ def pryamo():
             cv2.imshow('Final', detect)
             do("for(%s, %s)" % (motL, motR))
             time.sleep(0.03)
-
-
-def pizda():
-    # resp = urllib.request.urlopen("http://10.5.5.9:8080/live/amba.m3u8")
-    resp = urllib.request.urlopen("http://10.5.5.9:8080/videos/DCIM/118GOPRO/GOPR7753.JPG")
-    image = np.asarray(bytearray(resp.read()), dtype="uint8")
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-    resized = cv2.resize (image, (400, 300))
-    return resized
-
-
-POINTS = []
-lowers = {}  # массив с нижними уровнями для 3 цветов
-uppers = {}  # массив с верхними уровнями для 3 цветов
-
-colors = ['green', 'white', 'blue', 'red']
-pucks = {colors[0]: [], colors[1]: [], colors[2]: [], colors[3]: []}  # кортеж с шайбами
-color_index = 0
-
-start_grabbing = False
-
-action_index = 0
-
-SIDE = 'PURPLE'
 
 
 def press(event, x, y, *kw):  # функция выбора пикселя для настройки цвета
@@ -494,8 +407,14 @@ def get_cur_puck(orig):
 
 def main():  # основной цикл
     global start_grabbing, color_index, action_index
-    orig = getImage()
+    k = 0
 
+    if  action_index <= 1:
+        color_index= 3
+    elif action_index == 2:
+        color_index = 0
+
+    orig = getImage()
     get_cur_puck(orig)
     h, w, c = orig.shape  # размеры картинки
     if len(pucks[colors[color_index]]) > 0:
@@ -505,7 +424,7 @@ def main():  # основной цикл
         tolerance_y = 10  # чуствительность по игреку
 
         text = ""
-        motL= ""
+        motL = ""
         motR = ""
 
         shift_x = 10
@@ -530,112 +449,63 @@ def main():  # основной цикл
             text += "  Go Forward"
         elif goal[1] > goal_y:
             text += "  Go Backward"
-            motL = "-"+'motR'
-            motR = "-"+"motL"
+            motL = "-" + 'motR'
+            motR = "-" + "motL"
 
-        do("shaiba(%s, %s)" % (motL, motR))
+        do("for(%s, %s)" % (motL, motR))
         time.sleep(0.04)
         print(goal[1])
         if text == 'OK  OK':
-            while True:
-                send(ser_wheels, 'take(0, 0)')
-                if SUCCESS in read(ser_wheels):
-                    break
-            while True:
-                send(ser_wheels, 'turn_two(0, 0)' )
-                if SUCCESS in read(ser_wheels):
-                    break
-            while True:
-                send(ser_wheels, 'shaiba_v_ebalo(%s, 0)' % (storona) )
-                if SUCCESS in read(ser_wheels):
-                    break
-            if action_index <= 2:
-                if SIDE == 0:
-                    # ВЫКИНУТЬ ПЕРВУЮ, ВТОРУЮ или ТРЕТЬЮ ШАЙБУ НАЛЕВО!!!
-                    pass
-                else:
-                    # ВЫКИНУТЬ ПЕРВУЮ, ВТОРУЮ или ТРЕТЬЮ ШАЙБУ НАПРАВО!!!
-                    pass
-                time.sleep(3)
-                # do(..., ...)   ПРОЕХАТЬ ДО СЛЕД ШАЙБЫ
-                if action_index == 2:
-                    # do(..., ...)   ПРОЕХАТЬ ВПЕРЕД ДО КУЧИ
-                    color_index = 2  # BLUE
-                    pass
-                if action_index == 1:
-                    color_index = 0  # GREEN
+            if action_index == 0:
+                k = 0
+                while k != 1:
+                    send(ser_wheels, 'two_arduino(0, 0)')
+                    start_time = time.time()
+                    while time.time() - start_time < 10:
+                        if SUCCESS in read(ser_wheels):
+                            k = 1
                 action_index += 1
 
-            elif action_index >= 3:
-                # do(..., ...)   ВЗЯТЬ ШАЙБУ ИЗ КУЧИ
-                if action_index in [3, 4]:
-                    color_index = 3
-                elif action_index == 5:
-                    color_index = 0
-                elif action_index == 6:
-                    color_index = 2
-                pass
+            if action_index <= 2:
+                k = 0
+                while k != 1:
+                    send(ser_wheels, 'three_arduino(%s, 0)' % action_index)
+                    start_time = time.time()
+                    while time.time() - start_time < 10:
+                        if SUCCESS in read(ser_wheels):
+                            k = 1
+                action_index += 1
 
-        cv2.circle(orig, goal, 10, (0, 0, 255), -1)  # отмечаем целевую шайбу красным цветом
-        cv2.circle(orig, (int(w / 2), goal_y), 10, (0, 255, 0), -1)  # отмечаем целевую шайбу красным цветом
-        cv2.putText(orig, text, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0),
-                    3)  # рисуем указания по движению робота
+        elif action_index >= 3:
+            # do(..., ...)   ВЗЯТЬ ШАЙБУ ИЗ КУЧИ
+            if action_index in [3, 4]:
+                color_index = 3
+            elif action_index == 5:
+                color_index = 0
+            elif action_index == 6:
+                color_index = 2
+            pass
 
-        # except Exception as exception:
-        #     print("Color detection runtime error: %s" % exception)
-        #     pass
+    cv2.circle(orig, goal, 10, (0, 0, 255), -1)  # отмечаем целевую шайбу красным цветом
+    cv2.circle(orig, (int(w / 2), goal_y), 10, (0, 255, 0), -1)  # отмечаем целевую шайбу красным цветом
+    cv2.putText(orig, text, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0),
+                3)  # рисуем указания по движению робота
 
-    cv2.imshow('Final', orig)
+    # except Exception as exception:
+    #     print("Color detection runtime error: %s" % exception)
+    #     pass
 
+
+cv2.imshow('Final', orig)
 
 setup()
-cv2.namedWindow("Final")
 # first()
 initialize()
-# while shmor ! = "ready":
-#     while len(str(shmor)) < 3:
-#         send(ser_wheels, 'shmor\n')
-#         shmor = read(ser_wheels)
 
-# while True:
-#     send(ser_wheels, 'for(100, 100)')
-#     if SUCCESS in read(ser_wheels):
-#         print(read(ser_wheels))
-#         break
-# start_time = time.time()
-# # take_puck()
-# while True:
-#     send(ser_wheels, 'turn_three(0, 0)')
-#     if SUCCESS in read(ser_wheels):
-#         print(read(ser_wheels))
-#         break
-# push_atom()
-
-while len(str(storona)) < 3:
-    send(ser_wheels, 'storona\n')
-    storona = read(ser_wheels)
-storona = 0 if storona == 'purple' else 1
-print(storona)
-
-req = "turn_one(%s, 0)" % storona
-ok = False
-death_count = 0
-while not ok:
-    send(ser_wheels, req)
-    data = read(ser_wheels)
-    print(data)
-    if SUCCESS in data:
-        ok = True
-    elif REFUSED in data:
-        death_count += 1
-
-    if death_count == 2:
-        while True:
-            send(ser_wheels, 'smert(0, 0)')
-            if SUCCESS in read(ser_wheels):
-                break
-        time.sleep(1000000)
-print('pizdaaaaaa')
+# shmor
+while True:
+    if SUCCESS in read(ser_wheels):
+        break
 
 while True:  # вызывает главную функцию каждый кадр
     key = cv2.waitKey(1) & 0xFF

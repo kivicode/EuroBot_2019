@@ -1,37 +1,52 @@
-void setAngle_(int servo_id, int angle) {
-  driver.setChannelPWM(servo_id, pwmServo.pwmForAngle(angle));
-}
-
-void setAngle(int servo_id, int angle, int del) {
-  if (del == 0) {
-    setAngle_(servo_id, angle);
-    angles[servo_id] = angle;
-    return;
-  }
-
-  int prev = angles[servo_id];
-  int curr = angle;
-
-  if (prev < curr) {
-    for (int a = prev; a <= curr; ++a) {
-      setAngle_(servo_id, a);
-      delay(del);
-    }
-  } else {
-    for (int a = prev; a > curr; --a) {
-      setAngle_(servo_id, a);
-      delay(del);
-    }
-  }
-
-  angles[servo_id] = curr;
-}
+//void setAngle_(int servo_id, int angle) {
+//  driver.setChannelPWM(servo_id, pwmServo.pwmForAngle(angle));
+//}
+//
+//void setAngle(int servo_id, int angle, int del) {
+//  if (del == 0) {
+//    setAngle_(servo_id, angle);
+//    angles[servo_id] = angle;
+//    return;
+//  }
+//
+//  int prev = angles[servo_id];
+//  int curr = angle;
+//
+//  if (prev < curr) {
+//    for (int a = prev; a <= curr; ++a) {
+//      setAngle_(servo_id, a);
+//      delay(del);
+//    }
+//  } else {
+//    for (int a = prev; a > curr; --a) {
+//      setAngle_(servo_id, a);
+//      delay(del);
+//    }
+//  }
+//
+//  angles[servo_id] = curr;
+//}
 void setAngle(int servo_id, int angle) {
-  setAngle(servo_id, -angle, 0);
-  angles[servo_id] = angle;
+  //  setAngle(servo_id, -angle, 0);
+  //  angles[servo_id] = angle;
+  switch (servo_id) {
+    case 0:
+      servo0.write(-angle);
+    case 1:
+       servo1.write(-angle);
+      break;
+    case 2:
+       servo2.write(-angle);
+      break;
+    case 3:
+       servo3.write(-angle);
+      break;
+    case 4:
+       servo4.write(-angle);
+      break;
+  }
 }
- void test (){
- shaiba_v_ebalo(1);
+void test () {
 
   //  takeRU();
   //  delay(2000);
@@ -46,8 +61,7 @@ void setAngle(int servo_id, int angle) {
   //  delay(200000);
 }
 
-void straight(int stor) {
-
+void straight() {
   setAngle(0, 0);
   delay(300);
   setAngle(1, 90);
@@ -63,15 +77,13 @@ void straight(int stor) {
   setAngle(3, 40);
   delay(300);
 
-
-  if (stor == 0) {
+  if (digitalRead(storona) == 0) {
     setAngle(0, 90);
     delay(200);
   } else {
     setAngle(0, -90);
     delay(200);
   }
-
 }
 
 void enablePomp() {
@@ -90,13 +102,6 @@ void kick () {
 }
 
 void ostrich() {  // спрятал голову в песок work
-  //  setAngle(1, 50);
-  //  setAngle(2, -80);
-  //  setAngle(3, -70);
-  //  delay(1000);
-  //  setAngle(0, 90);
-  //  setAngle(4, 0);
-
   setAngle(1, 20);
   delay(300);
   setAngle(3, -70);
@@ -117,30 +122,8 @@ void ostrich() {  // спрятал голову в песок work
 
   setAngle(0, 90);
   delay(300);
-
   setAngle(2, 30);
   delay(300);
-  //          setAngle(0, -90);
-  //  delay(500);
-  //        setAngle(3,65);
-  //    delay(500);
-  //
-  //
-  //        setAngle(1, -60);
-  //    delay(500);
-
-  //
-  //    setAngle(0, 90);
-  //  delay(200);
-  //    setAngle(1, -60);
-  //  delay(200);
-  //    setAngle(2,30);
-  //  delay(200);
-  //      setAngle(3,65);
-  //  delay(200);
-  //      setAngle(4,60);
-  //  delay(200);
-  //
 }
 
 void smeh () {   //work
@@ -268,7 +251,7 @@ void takeLU() {
   enablePomp();//!!
   delay(1000);
   kick();
-  //  disablePomp();
+  disablePomp();
   delay(1000);
   ostrich();
 }
@@ -285,7 +268,7 @@ void takeRU() {
   enablePomp();//!!
   delay(1000);
   kick();
-  //  disablePomp();
+  disablePomp();
   delay(1000);
   ostrich();
 }
@@ -302,7 +285,7 @@ void takeRD() {
   enablePomp();//!!
   delay(1000);
   kick();
-  //  disablePomp();
+  disablePomp();
   delay(1000);
   ostrich();
 }
@@ -326,8 +309,7 @@ void takeLD() {
 
 int takeNumber = 0;
 
-
-void shaiba_v_ebalo(int str) {
+void putRU() {
   ostrich();
   midPos();
   enablePomp();
@@ -341,18 +323,84 @@ void shaiba_v_ebalo(int str) {
   delay(300);
   setAngle(1, -30);
   delay(300);
-
   enablePomp();
   delay(3000);
-
   ostrich();
-  straight(str);
+  straight();
   kick();
   delay(1000);
-  // disablePomp();
+  disablePomp();
 }
-void take() {
-  switch (takeNumber) {
+void putLU() {
+  ostrich();
+  midPos();
+  enablePomp();
+  delay(1000);
+  setAngle(0, 20);
+  takeUp();
+  enablePomp();
+  setAngle(4, -45);
+  delay(300);
+  setAngle(2, -50);
+  delay(300);
+  setAngle(1, -30);
+  delay(300);
+  enablePomp();
+  delay(3000);
+  ostrich();
+  straight();
+  kick();
+  delay(1000);
+  disablePomp();
+}
+void putRD() {
+  ostrich();
+  midPos();
+  enablePomp();
+  delay(1000);
+  setAngle(0, -20);
+  takeDown();
+  enablePomp();
+  setAngle(4, -45);
+  delay(300);
+  setAngle(2, -50);
+  delay(300);
+  setAngle(1, -30);
+  delay(300);
+  enablePomp();
+  delay(3000);
+  ostrich();
+  straight();
+  kick();
+  delay(1000);
+  disablePomp();
+}
+void putLD() {
+  ostrich();
+  midPos();
+  enablePomp();
+  delay(1000);
+  setAngle(0, 20);
+  takeDown();
+  enablePomp();
+  setAngle(4, -45);
+  delay(300);
+  setAngle(2, -50);
+  delay(300);
+  setAngle(1, -30);
+  delay(300);
+  enablePomp();
+  delay(3000);
+  ostrich();
+  straight();
+  kick();
+  delay(1000);
+  disablePomp();
+}
+int takeNumbe = 0;
+int putNumber = 0;
+void take( int kuda) {
+  switch (kuda) {
     case 3:
       takeRU();
       break;
@@ -367,4 +415,21 @@ void take() {
       break;
   }
   takeNumber++;
+}
+void putt(int kuda) {
+  switch (kuda) {
+    case 3:
+      putRU();
+      break;
+    case 1:
+      putLU();
+      break;
+    case 2:
+      putLD();
+      break;
+    case 0:
+      putRD();
+      break;
+  }
+  putNumber++;
 }
